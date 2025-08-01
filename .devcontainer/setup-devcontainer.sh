@@ -39,20 +39,7 @@ cp -r /usr/local/share/dotfiles/.tmux.conf /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.config /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.default-npm-packages /home/jsnchn/
 
-# Handle opencode config with token substitution
-if [ -f "/usr/local/share/dotfiles/.config/opencode/config.json.template" ]; then
-    if [ -n "$GITHUB_COPILOT_TOKEN" ]; then
-        # Substitute the token if environment variable is set
-        sed "s/\${GITHUB_COPILOT_TOKEN}/$GITHUB_COPILOT_TOKEN/g" \
-            /usr/local/share/dotfiles/.config/opencode/config.json.template \
-            > /home/jsnchn/.config/opencode/config.json
-    else
-        # Copy template as-is if no token provided
-        cp /usr/local/share/dotfiles/.config/opencode/config.json.template \
-           /home/jsnchn/.config/opencode/config.json
-        echo "Warning: GITHUB_COPILOT_TOKEN not set. OpenCode GitHub integration will not work."
-    fi
-fi
+# Opencode config is already copied with other .config files
 
 # Install mise
 sudo -u jsnchn bash -c 'curl https://mise.run | sh'

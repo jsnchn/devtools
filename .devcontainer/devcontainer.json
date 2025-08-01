@@ -29,8 +29,7 @@
   "runArgs": ["--init"],
   
   "containerEnv": {
-    "SHELL": "/bin/zsh",
-    "GITHUB_COPILOT_TOKEN": "${localEnv:GITHUB_COPILOT_TOKEN}"
+    "SHELL": "/bin/zsh"
   },
   
   "remoteEnv": {

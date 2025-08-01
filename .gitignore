@@ -1,5 +1,4 @@
-# Sensitive files
-.devcontainer/dotfiles/.config/opencode/config.json
+# Environment files
 .env
 .env.local
 
