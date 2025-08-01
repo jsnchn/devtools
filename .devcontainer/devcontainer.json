@@ -16,7 +16,7 @@
     }
   },
   
-  "postCreateCommand": "sudo /usr/local/share/setup-devcontainer.sh",
+  "postCreateCommand": "sudo bash /usr/local/share/setup-devcontainer.sh || (echo 'Setup failed. Check /tmp/setup-devcontainer.log for details' && exit 1)",
   
   "postStartCommand": "tmux new-session -d -s main 2>/dev/null || true",
   
