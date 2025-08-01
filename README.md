@@ -1,4 +1,4 @@
-# Portable Development Container
+# Portable Development Environment
 
 This repository contains a portable development environment based on Ubuntu 22.04 with all my development tools and configurations.
 
