@@ -18,10 +18,15 @@ apt-get update && apt-get install -y \
     npm \
     golang \
     rustc \
-    cargo
+    cargo \
+    tmux \
+    zsh \
+    jq \
+    unzip
 
 # Copy dotfiles to home directory
 cp -r /usr/local/share/dotfiles/.zshrc /home/jsnchn/.zshrc
+cp -r /usr/local/share/dotfiles/.zprofile /home/jsnchn/.zprofile
 cp -r /usr/local/share/dotfiles/.tmux.conf /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.config /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.default-npm-packages /home/jsnchn/
@@ -81,8 +86,10 @@ sudo -u jsnchn git clone --depth 1 https://github.com/junegunn/fzf.git /home/jsn
 sudo -u jsnchn /home/jsnchn/.fzf/install --all --no-bash --no-fish
 
 # Install lazydocker
-curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
-mv lazydocker /usr/local/bin/
+curl -Lo lazydocker.tar.gz https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_0.23.1_Linux_x86_64.tar.gz
+tar xf lazydocker.tar.gz lazydocker
+install lazydocker /usr/local/bin
+rm lazydocker.tar.gz lazydocker
 
 # Set up mise tools
 sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/bin:$PATH" && /home/jsnchn/.local/bin/mise install'
@@ -92,5 +99,24 @@ sudo -u jsnchn bash -c 'tmux start-server && tmux new-session -d && /home/jsnchn
 
 # Fix ownership
 chown -R jsnchn:jsnchn /home/jsnchn
+
+# Create symlink for fd-find
+ln -sf /usr/bin/fdfind /usr/local/bin/fd
+
+# Verify installations
+echo "Verifying tool installations..."
+echo -n "git: "; which git && git --version
+echo -n "zsh: "; which zsh && zsh --version
+echo -n "tmux: "; which tmux && tmux -V
+echo -n "nvim: "; which nvim && nvim --version | head -1
+echo -n "lazygit: "; which lazygit && lazygit --version | head -1
+echo -n "lazydocker: "; which lazydocker && lazydocker --version
+echo -n "slumber: "; which slumber && slumber --version
+echo -n "harlequin: "; which harlequin && harlequin --version
+echo -n "fzf: "; /home/jsnchn/.fzf/bin/fzf --version
+echo -n "mise: "; /home/jsnchn/.local/bin/mise --version
+echo -n "rg: "; which rg && rg --version | head -1
+echo -n "fd: "; which fd && fd --version
+echo -n "direnv: "; which direnv && direnv version
 
 echo "Development environment setup complete!"

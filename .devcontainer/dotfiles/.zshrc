@@ -1,3 +1,8 @@
+# Add paths for installed tools
+export PATH="/usr/local/bin:$PATH"
+export PATH="$HOME/.fzf/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
@@ -42,8 +47,9 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=* l:|=*'
 ###
 # direnv
 ###
-
-eval "$(direnv hook zsh)"
+if command -v direnv &> /dev/null; then
+    eval "$(direnv hook zsh)"
+fi
 
 # pnpm
 export PNPM_HOME="/home/jsnchn/.local/share/pnpm"
@@ -70,7 +76,9 @@ alias air="~/go/bin/air"
 ###
 # mise-en-place
 ###
-eval "$(mise activate zsh)"
+if [ -f "$HOME/.local/bin/mise" ]; then
+    eval "$($HOME/.local/bin/mise activate zsh)"
+fi
 
 ###
 # fzf
