@@ -16,7 +16,7 @@
     }
   },
   
-  "postCreateCommand": "/bin/bash -c 'apt-get update && apt-get install -y git curl wget build-essential ripgrep fd-find direnv && /usr/local/share/setup-devcontainer.sh'",
+  "postCreateCommand": "sudo /usr/local/share/setup-devcontainer.sh",
   
   "postStartCommand": "tmux new-session -d -s main 2>/dev/null || true",
   

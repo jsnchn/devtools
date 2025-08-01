@@ -3,6 +3,23 @@ set -e
 
 echo "Setting up development environment..."
 
+# Install required packages
+apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    build-essential \
+    ripgrep \
+    fd-find \
+    direnv \
+    python3-pip \
+    python3-venv \
+    nodejs \
+    npm \
+    golang \
+    rustc \
+    cargo
+
 # Copy dotfiles to home directory
 cp -r /usr/local/share/dotfiles/.zshrc /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.tmux.conf /home/jsnchn/
@@ -29,7 +46,7 @@ curl https://mise.run | sh
 echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
 
 # Install tmux plugin manager
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+sudo -u jsnchn git clone https://github.com/tmux-plugins/tpm /home/jsnchn/.tmux/plugins/tpm
 
 # Install Neovim
 curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
@@ -38,15 +55,7 @@ mv nvim-linux64 /opt/nvim
 ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
 rm nvim-linux64.tar.gz
 
-# Install LazyVim dependencies
-apt-get update && apt-get install -y \
-    python3-pip \
-    python3-venv \
-    nodejs \
-    npm \
-    golang \
-    rustc \
-    cargo
+# LazyVim dependencies are already installed above
 
 # Install language servers and tools for Neovim
 npm install -g neovim
@@ -68,22 +77,18 @@ mv slumber-x86_64-unknown-linux-gnu /usr/local/bin/slumber
 pip3 install harlequin
 
 # Install fzf
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --all --no-bash --no-fish
+sudo -u jsnchn git clone --depth 1 https://github.com/junegunn/fzf.git /home/jsnchn/.fzf
+sudo -u jsnchn /home/jsnchn/.fzf/install --all --no-bash --no-fish
 
 # Install lazydocker
 curl https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh | bash
 mv lazydocker /usr/local/bin/
 
 # Set up mise tools
-export PATH="$HOME/.local/bin:$PATH"
-~/.local/bin/mise install
+sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/bin:$PATH" && /home/jsnchn/.local/bin/mise install'
 
 # Initialize tmux plugins
-tmux start-server
-tmux new-session -d
-~/.tmux/plugins/tpm/scripts/install_plugins.sh
-tmux kill-server
+sudo -u jsnchn bash -c 'tmux start-server && tmux new-session -d && /home/jsnchn/.tmux/plugins/tpm/scripts/install_plugins.sh && tmux kill-server'
 
 # Fix ownership
 chown -R jsnchn:jsnchn /home/jsnchn
