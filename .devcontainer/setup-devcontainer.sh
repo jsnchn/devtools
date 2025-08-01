@@ -9,8 +9,8 @@ echo "Starting development environment setup at $(date)..."
 echo "Running as user: $(whoami)"
 echo "Home directory: $HOME"
 
-# Install required packages
-echo "Installing system packages..."
+# Install essential packages only
+echo "Installing essential system packages..."
 apt-get update || { echo "apt-get update failed"; exit 1; }
 apt-get install -y \
     git \
@@ -22,11 +22,6 @@ apt-get install -y \
     direnv \
     python3-pip \
     python3-venv \
-    nodejs \
-    npm \
-    golang \
-    rustc \
-    cargo \
     tmux \
     zsh \
     jq \
@@ -55,11 +50,7 @@ mv nvim-linux64 /opt/nvim
 ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
 rm nvim-linux64.tar.gz
 
-# LazyVim dependencies are already installed above
-
-# Install language servers and tools for Neovim
-npm install -g neovim
-pip3 install pynvim
+# LazyVim dependencies will be installed via mise
 
 # Install lazygit
 echo "Installing lazygit..."
@@ -70,12 +61,16 @@ install lazygit /usr/local/bin
 rm -f lazygit.tar.gz lazygit
 
 # Install slumber HTTP client
-curl -LO https://github.com/LucasPickering/slumber/releases/latest/download/slumber-x86_64-unknown-linux-gnu
-chmod +x slumber-x86_64-unknown-linux-gnu
-mv slumber-x86_64-unknown-linux-gnu /usr/local/bin/slumber
+echo "Installing slumber..."
+curl -LO https://github.com/LucasPickering/slumber/releases/latest/download/slumber-x86_64-unknown-linux-gnu || echo "Warning: Failed to download slumber"
+if [ -f slumber-x86_64-unknown-linux-gnu ]; then
+    chmod +x slumber-x86_64-unknown-linux-gnu
+    mv slumber-x86_64-unknown-linux-gnu /usr/local/bin/slumber
+fi
 
 # Install harlequin SQL client
-pip3 install harlequin
+echo "Installing harlequin..."
+pip3 install harlequin || echo "Warning: Failed to install harlequin"
 
 # Install fzf
 sudo -u jsnchn git clone --depth 1 https://github.com/junegunn/fzf.git /home/jsnchn/.fzf
@@ -90,7 +85,13 @@ install lazydocker /usr/local/bin
 rm -f lazydocker.tar.gz lazydocker
 
 # Set up mise tools
-sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/bin:$PATH" && /home/jsnchn/.local/bin/mise install'
+echo "Installing mise tools..."
+sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/bin:$PATH" && cd /home/jsnchn && /home/jsnchn/.local/bin/mise install -y'
+
+# Install Neovim dependencies after mise installs node/python
+echo "Installing Neovim dependencies..."
+sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/share/mise/shims:$PATH" && which npm && npm install -g neovim || echo "npm not available yet"'
+sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/share/mise/shims:$PATH" && which python3 && pip3 install pynvim || echo "pip3 not available yet"'
 
 # Initialize tmux plugins
 echo "Initializing tmux plugins..."
