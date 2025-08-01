@@ -21,7 +21,7 @@ apt-get update && apt-get install -y \
     cargo
 
 # Copy dotfiles to home directory
-cp -r /usr/local/share/dotfiles/.zshrc /home/jsnchn/
+cp -r /usr/local/share/dotfiles/.zshrc /home/jsnchn/.zshrc
 cp -r /usr/local/share/dotfiles/.tmux.conf /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.config /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.default-npm-packages /home/jsnchn/
@@ -42,8 +42,8 @@ if [ -f "/usr/local/share/dotfiles/.config/opencode/config.json.template" ]; the
 fi
 
 # Install mise
-curl https://mise.run | sh
-echo 'eval "$(~/.local/bin/mise activate bash)"' >> ~/.bashrc
+sudo -u jsnchn bash -c 'curl https://mise.run | sh'
+echo 'eval "$(/home/jsnchn/.local/bin/mise activate bash)"' >> /home/jsnchn/.bashrc
 
 # Install tmux plugin manager
 sudo -u jsnchn git clone https://github.com/tmux-plugins/tpm /home/jsnchn/.tmux/plugins/tpm
