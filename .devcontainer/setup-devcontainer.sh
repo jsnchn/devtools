@@ -11,8 +11,8 @@ echo "Home directory: $HOME"
 
 # Install essential packages only
 echo "Installing essential system packages..."
-apt update || { echo "apt update failed"; exit 1; }
-apt install -y \
+apt-get update || { echo "apt-get update failed"; exit 1; }
+apt-get install -y \
     git \
     gpg \
     sudo \
@@ -42,8 +42,8 @@ cp -r /usr/local/share/dotfiles/.default-npm-packages /home/jsnchn/
 sudo -u jsnchn install -dm 755 /etc/apt/keyrings
 wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
 echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
-apt update
-apt install -y mise
+apt-get update
+apt-get install -y mise
 
 # Install tmux plugin manager
 echo "Installing tmux plugin manager..."
