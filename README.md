@@ -9,7 +9,7 @@ This repository contains a portable development environment based on Ubuntu 22.0
 - **Editor**: Neovim with LazyVim
 - **Version Manager**: mise for managing development tools
 - **Git Tools**: git, lazygit
-- **Docker Tools**: lazydocker
+
 - **HTTP Client**: slumber
 - **SQL Client**: harlequin
 - **Utilities**: curl, wget, ripgrep, fd-find, direnv, fzf
