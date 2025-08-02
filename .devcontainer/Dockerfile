@@ -46,8 +46,8 @@ RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygi
 RUN SLUMBER_VERSION=$(curl -s https://api.github.com/repos/LucasPickering/slumber/releases/latest | grep -Po '"tag_name": "v\K[^"]*' || echo "3.3.0") \
     && curl -Lo slumber.tar.xz "https://github.com/LucasPickering/slumber/releases/download/v${SLUMBER_VERSION}/slumber-x86_64-unknown-linux-gnu.tar.xz" \
     && tar -xf slumber.tar.xz \
-    && install slumber /usr/local/bin \
-    && rm -f slumber.tar.xz slumber
+    && install slumber-x86_64-unknown-linux-gnu/slumber /usr/local/bin \
+    && rm -rf slumber.tar.xz slumber-x86_64-unknown-linux-gnu
 
 # Copy dotfiles and setup script
 COPY dotfiles /usr/local/share/dotfiles
