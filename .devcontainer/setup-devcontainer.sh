@@ -41,24 +41,46 @@ sudo -u jsnchn bash -c 'curl https://mise.run | sh'
 echo 'eval "$(/home/jsnchn/.local/bin/mise activate bash)"' >> /home/jsnchn/.bashrc
 
 # Install tmux plugin manager
-sudo -u jsnchn git clone https://github.com/tmux-plugins/tpm /home/jsnchn/.tmux/plugins/tpm
+echo "Installing tmux plugin manager..."
+if sudo -u jsnchn git clone https://github.com/tmux-plugins/tpm /home/jsnchn/.tmux/plugins/tpm; then
+    echo "TPM installed successfully"
+else
+    echo "Warning: Failed to install TPM, but continuing..."
+fi
 
 # Install Neovim
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
-tar xzf nvim-linux64.tar.gz
-mv nvim-linux64 /opt/nvim
-ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
-rm nvim-linux64.tar.gz
+echo "Installing Neovim..."
+if curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz; then
+    if tar xzf nvim-linux64.tar.gz; then
+        mv nvim-linux64 /opt/nvim
+        ln -s /opt/nvim/bin/nvim /usr/local/bin/nvim
+        rm -f nvim-linux64.tar.gz
+        echo "Neovim installed successfully"
+    else
+        echo "Failed to extract Neovim archive"
+        rm -f nvim-linux64.tar.gz
+    fi
+else
+    echo "Failed to download Neovim"
+fi
 
 # LazyVim dependencies will be installed via mise
 
 # Install lazygit
 echo "Installing lazygit..."
 LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "0.40.2")
-curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-tar xf lazygit.tar.gz lazygit
-install lazygit /usr/local/bin
-rm -f lazygit.tar.gz lazygit
+if curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"; then
+    if tar xf lazygit.tar.gz lazygit 2>/dev/null; then
+        install lazygit /usr/local/bin
+        rm -f lazygit.tar.gz lazygit
+        echo "lazygit installed successfully"
+    else
+        echo "Failed to extract lazygit archive"
+        rm -f lazygit.tar.gz
+    fi
+else
+    echo "Failed to download lazygit"
+fi
 
 # Install slumber HTTP client
 echo "Installing slumber..."
@@ -79,10 +101,18 @@ sudo -u jsnchn /home/jsnchn/.fzf/install --all --no-bash --no-fish
 # Install lazydocker
 echo "Installing lazydocker..."
 LAZYDOCKER_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "0.23.1")
-curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
-tar xf lazydocker.tar.gz lazydocker
-install lazydocker /usr/local/bin
-rm -f lazydocker.tar.gz lazydocker
+if curl -Lo lazydocker.tar.gz "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"; then
+    if tar xf lazydocker.tar.gz lazydocker 2>/dev/null; then
+        install lazydocker /usr/local/bin
+        rm -f lazydocker.tar.gz lazydocker
+        echo "lazydocker installed successfully"
+    else
+        echo "Failed to extract lazydocker archive"
+        rm -f lazydocker.tar.gz
+    fi
+else
+    echo "Failed to download lazydocker"
+fi
 
 # Set up mise tools
 echo "Installing mise tools..."
@@ -95,7 +125,11 @@ sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/share/mise/shims:$PATH"
 
 # Initialize tmux plugins
 echo "Initializing tmux plugins..."
-sudo -u jsnchn bash -c 'tmux start-server && tmux new-session -d && /home/jsnchn/.tmux/plugins/tpm/scripts/install_plugins.sh && tmux kill-server' || echo "Warning: tmux plugin installation failed, but continuing..."
+if [ -d "/home/jsnchn/.tmux/plugins/tpm" ]; then
+    sudo -u jsnchn bash -c 'tmux start-server && tmux new-session -d && /home/jsnchn/.tmux/plugins/tpm/scripts/install_plugins.sh && tmux kill-server' || echo "Warning: tmux plugin installation failed, but continuing..."
+else
+    echo "Warning: TPM not found, skipping tmux plugin initialization"
+fi
 
 # Fix ownership
 chown -R jsnchn:jsnchn /home/jsnchn
