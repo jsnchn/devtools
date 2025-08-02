@@ -9,41 +9,16 @@ echo "Starting development environment setup at $(date)..."
 echo "Running as user: $(whoami)"
 echo "Home directory: $HOME"
 
-# Install essential packages only
-echo "Installing essential system packages..."
-apt-get update || { echo "apt-get update failed"; exit 1; }
-apt-get install -y \
-    git \
-    gpg \
-    sudo \
-    curl \
-    wget \
-    build-essential \
-    ripgrep \
-    fd-find \
-    direnv \
-    python3-pip \
-    python3-venv \
-    tmux \
-    zsh \
-    jq \
-    unzip \
-    neovim || { echo "apt install failed"; exit 1; }
-
+# Fix ownership
+chown -R jsnchn:jsnchn /home/jsnchn
 
 # Copy dotfiles to home directory
+echo "Copying dotfiles to home directory..."
 cp -r /usr/local/share/dotfiles/.zshrc /home/jsnchn/.zshrc
 cp -r /usr/local/share/dotfiles/.zprofile /home/jsnchn/.zprofile
 cp -r /usr/local/share/dotfiles/.tmux.conf /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.config /home/jsnchn/
 cp -r /usr/local/share/dotfiles/.default-npm-packages /home/jsnchn/
-
-# Install mise
-sudo -u jsnchn install -dm 755 /etc/apt/keyrings
-wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | sudo tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null
-echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
-apt-get update
-apt-get install -y mise
 
 # Install tmux plugin manager
 echo "Installing tmux plugin manager..."
@@ -53,39 +28,10 @@ else
     echo "Warning: Failed to install TPM, but continuing..."
 fi
 
-# Install lazygit
-echo "Installing lazygit..."
-LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "0.40.2")
-if curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"; then
-    if tar xf lazygit.tar.gz lazygit 2>/dev/null; then
-        install lazygit /usr/local/bin
-        rm -f lazygit.tar.gz lazygit
-        echo "lazygit installed successfully"
-    else
-        echo "Failed to extract lazygit archive"
-        rm -f lazygit.tar.gz
-    fi
-else
-    echo "Failed to download lazygit"
-fi
-
-# Install slumber HTTP client
-echo "Installing slumber..."
-curl -LO https://github.com/LucasPickering/slumber/releases/latest/download/slumber-x86_64-unknown-linux-gnu || echo "Warning: Failed to download slumber"
-if [ -f slumber-x86_64-unknown-linux-gnu ]; then
-    chmod +x slumber-x86_64-unknown-linux-gnu
-    mv slumber-x86_64-unknown-linux-gnu /usr/local/bin/slumber
-fi
-
-# Install harlequin SQL client
-echo "Installing harlequin..."
-pip3 install harlequin || echo "Warning: Failed to install harlequin"
-
-# Install fzf
+# Install fzf (user-specific installation)
+echo "Installing fzf..."
 sudo -u jsnchn git clone --depth 1 https://github.com/junegunn/fzf.git /home/jsnchn/.fzf
 sudo -u jsnchn /home/jsnchn/.fzf/install --all --no-bash --no-fish
-
-
 
 # Set up mise tools
 echo "Installing mise tools..."
@@ -104,12 +50,6 @@ else
     echo "Warning: TPM not found, skipping tmux plugin initialization"
 fi
 
-# Fix ownership
-chown -R jsnchn:jsnchn /home/jsnchn
-
-# Create symlink for fd-find
-ln -sf /usr/bin/fdfind /usr/local/bin/fd
-
 # Verify installations
 echo "Verifying tool installations..."
 echo -n "git: "; which git && git --version || echo "NOT FOUND"
@@ -117,7 +57,6 @@ echo -n "zsh: "; which zsh && zsh --version || echo "NOT FOUND"
 echo -n "tmux: "; which tmux && tmux -V || echo "NOT FOUND"
 echo -n "nvim: "; which nvim && nvim --version | head -1 || echo "NOT FOUND"
 echo -n "lazygit: "; which lazygit && lazygit --version | head -1 || echo "NOT FOUND"
-
 echo -n "slumber: "; which slumber && slumber --version || echo "NOT FOUND"
 echo -n "harlequin: "; which harlequin && harlequin --version || echo "NOT FOUND"
 echo -n "fzf: "; test -f /home/jsnchn/.fzf/bin/fzf && /home/jsnchn/.fzf/bin/fzf --version || echo "NOT FOUND"
