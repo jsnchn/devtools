@@ -1,5 +1,10 @@
 FROM ubuntu:24.04
 
+# Create user first
+RUN useradd -m -s /bin/zsh -u 1000 jsnchn && \
+    usermod -aG sudo jsnchn && \
+    echo "jsnchn ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
 # Install essential packages
 RUN apt-get update && apt-get install -y \
     git \
@@ -24,14 +29,10 @@ RUN apt-get update && apt-get install -y \
 # Create symlink for fd-find
 RUN ln -sf /usr/bin/fdfind /usr/local/bin/fd
 
-# Install mise
-RUN install -dm 755 /etc/apt/keyrings \
-    && wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list \
-    && apt-get update \
-    && apt-get install -y mise \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Install mise using the standalone installer
+RUN curl https://mise.run | sh && \
+    mv /root/.local/bin/mise /usr/local/bin/mise && \
+    chmod +x /usr/local/bin/mise
 
 # Install lazygit
 RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "0.40.2") \

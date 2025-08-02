@@ -35,7 +35,7 @@ sudo -u jsnchn /home/jsnchn/.fzf/install --all --no-bash --no-fish
 
 # Set up mise tools
 echo "Installing mise tools..."
-sudo -u jsnchn bash -c 'export PATH="/home/jsnchn/.local/bin:$PATH" && cd /home/jsnchn && /home/jsnchn/.local/bin/mise install -y'
+sudo -u jsnchn bash -c 'cd /home/jsnchn && /usr/local/bin/mise install -y'
 
 # Install Neovim dependencies after mise installs node/python
 echo "Installing Neovim dependencies..."
@@ -60,7 +60,7 @@ echo -n "lazygit: "; which lazygit && lazygit --version | head -1 || echo "NOT F
 echo -n "slumber: "; which slumber && slumber --version || echo "NOT FOUND"
 echo -n "harlequin: "; which harlequin && harlequin --version || echo "NOT FOUND"
 echo -n "fzf: "; test -f /home/jsnchn/.fzf/bin/fzf && /home/jsnchn/.fzf/bin/fzf --version || echo "NOT FOUND"
-echo -n "mise: "; test -f /home/jsnchn/.local/bin/mise && /home/jsnchn/.local/bin/mise --version || echo "NOT FOUND"
+echo -n "mise: "; which mise && mise --version || echo "NOT FOUND"
 echo -n "rg: "; which rg && rg --version | head -1 || echo "NOT FOUND"
 echo -n "fd: "; which fd && fd --version || echo "NOT FOUND"
 echo -n "direnv: "; which direnv && direnv version || echo "NOT FOUND"
