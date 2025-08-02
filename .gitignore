@@ -12,3 +12,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+.
+
+# Log files
+logs
