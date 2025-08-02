@@ -1,11 +1,7 @@
 FROM ubuntu:24.04
 
 # Install essential packages
-RUN install -dm 755 /etc/apt/keyrings \
-    && wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list \
-	&& apt-get update \
-	&& apt-get install -y \
+RUN apt-get update && apt-get install -y \
     git \
     gpg \
     sudo \
@@ -22,12 +18,20 @@ RUN install -dm 755 /etc/apt/keyrings \
     jq \
     unzip \
     neovim \
-    mise \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Create symlink for fd-find
 RUN ln -sf /usr/bin/fdfind /usr/local/bin/fd
+
+# Install mise
+RUN install -dm 755 /etc/apt/keyrings \
+    && wget -qO - https://mise.jdx.dev/gpg-key.pub | gpg --dearmor | tee /etc/apt/keyrings/mise-archive-keyring.gpg 1> /dev/null \
+    && echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.gpg arch=amd64] https://mise.jdx.dev/deb stable main" | tee /etc/apt/sources.list.d/mise.list \
+    && apt-get update \
+    && apt-get install -y mise \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install lazygit
 RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "0.40.2") \
