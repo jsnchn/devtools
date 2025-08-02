@@ -43,9 +43,7 @@ RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygi
     && rm -f lazygit.tar.gz lazygit
 
 # Install slumber HTTP client
-RUN curl -LO https://github.com/LucasPickering/slumber/releases/latest/download/slumber-x86_64-unknown-linux-gnu \
-    && chmod +x slumber-x86_64-unknown-linux-gnu \
-    && mv slumber-x86_64-unknown-linux-gnu /usr/local/bin/slumber
+RUN curl --proto '=https' --tlsv1.2 -LsSf https://github.com/LucasPickering/slumber/releases/download/v3.3.0/slumber-installer.sh | sh
 
 # Copy dotfiles and setup script
 COPY dotfiles /usr/local/share/dotfiles
