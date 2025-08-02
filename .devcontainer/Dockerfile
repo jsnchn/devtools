@@ -47,9 +47,6 @@ RUN curl -LO https://github.com/LucasPickering/slumber/releases/latest/download/
     && chmod +x slumber-x86_64-unknown-linux-gnu \
     && mv slumber-x86_64-unknown-linux-gnu /usr/local/bin/slumber
 
-# Install harlequin SQL client
-RUN pip3 install harlequin
-
 # Copy dotfiles and setup script
 COPY dotfiles /usr/local/share/dotfiles
 COPY setup-devcontainer.sh /usr/local/share/setup-devcontainer.sh
