@@ -1,11 +1,6 @@
 FROM ubuntu:24.04
 
-# Create user first
-RUN useradd -m -s /bin/zsh -u 1000 jsnchn && \
-    usermod -aG sudo jsnchn && \
-    echo "jsnchn ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-# Install essential packages
+# Install essential packages first
 RUN apt-get update && apt-get install -y \
     git \
     gpg \
@@ -25,6 +20,11 @@ RUN apt-get update && apt-get install -y \
     neovim \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Create user after zsh is installed
+RUN useradd -m -s /bin/zsh -u 1000 jsnchn && \
+    usermod -aG sudo jsnchn && \
+    echo "jsnchn ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Create symlink for fd-find
 RUN ln -sf /usr/bin/fdfind /usr/local/bin/fd
