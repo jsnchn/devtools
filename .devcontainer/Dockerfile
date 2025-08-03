@@ -21,11 +21,8 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Remove existing ubuntu user and create jsnchn user with UID 1000
-RUN userdel -r ubuntu 2>/dev/null || true && \
-    useradd -m -s /bin/zsh -u 1000 jsnchn && \
-    usermod -aG sudo jsnchn && \
-    echo "jsnchn ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+# Set root's shell to zsh
+RUN chsh -s /bin/zsh root
 
 # Create symlink for fd-find
 RUN ln -sf /usr/bin/fdfind /usr/local/bin/fd

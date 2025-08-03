@@ -10,9 +10,9 @@
       "configureZshAsDefaultShell": true,
       "installOhMyZsh": false,
       "upgradePackages": true,
-      "username": "jsnchn",
-      "userUid": "1000",
-      "userGid": "1000"
+      "username": "root",
+      "userUid": "0",
+      "userGid": "0"
     }
   },
   
@@ -20,7 +20,7 @@
   
   "postStartCommand": "tmux new-session -d -s main 2>/dev/null || true",
   
-  "remoteUser": "jsnchn",
+  "remoteUser": "root",
   
   "mounts": [],
   
@@ -33,6 +33,6 @@
   },
   
   "remoteEnv": {
-    "PATH": "/home/jsnchn/.local/share/mise/shims:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
+    "PATH": "/root/.local/share/mise/shims:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin"
   }
 }
