@@ -85,7 +85,3 @@ fi
 ###
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-###
-# slumber
-###
-source <(COMPLETE=zsh slumber)

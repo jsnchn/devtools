@@ -1,4 +1,2 @@
-@anthropic-ai/claude-code
-@google/gemini-cli
 opencode-ai@latest
 pnpm@latest-10
