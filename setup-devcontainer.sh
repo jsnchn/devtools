@@ -17,6 +17,11 @@ cp -r /usr/local/share/dotfiles/.tmux.conf /root/
 cp -r /usr/local/share/dotfiles/.config /root/
 cp -r /usr/local/share/dotfiles/.default-npm-packages /root/
 
+# Configure git
+echo "Configuring git..."
+git config --global user.email "jchen.json@gmail.com"
+git config --global user.name "Jason Chen"
+
 # Install tmux plugin manager
 echo "Installing tmux plugin manager..."
 if git clone https://github.com/tmux-plugins/tpm /root/.tmux/plugins/tpm; then
