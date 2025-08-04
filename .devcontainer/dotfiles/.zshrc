@@ -3,6 +3,10 @@ export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.fzf/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
+# Set default editor
+export EDITOR="nvim"
+export VISUAL="nvim"
+
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
