@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-# Install essential packages first
+# Install essential packages first (excluding neovim)
 RUN apt-get update && apt-get install -y \
     git \
     gpg \
@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y \
     zsh \
     jq \
     unzip \
-    neovim \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -31,6 +30,12 @@ RUN ln -sf /usr/bin/fdfind /usr/local/bin/fd
 RUN curl https://mise.run | sh && \
     mv /root/.local/bin/mise /usr/local/bin/mise && \
     chmod +x /usr/local/bin/mise
+
+# Install latest Neovim
+RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz \
+    && tar -C /opt -xzf nvim-linux64.tar.gz \
+    && ln -sf /opt/nvim-linux64/bin/nvim /usr/local/bin/nvim \
+    && rm nvim-linux64.tar.gz
 
 # Install lazygit
 RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "0.40.2") \
