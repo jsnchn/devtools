@@ -27,7 +27,7 @@ return {
     -- Optional: Custom mappings in Telescope prompt
     opts.defaults.mappings = opts.defaults.mappings or {}
     opts.defaults.mappings.i = opts.defaults.mappings.i or {}
-    opts.defaults.mappings.i["<S-h>"] = function(prompt_bufnr)
+    opts.defaults.mappings.i["<A-h>"] = function(prompt_bufnr)
       local action_state = require("telescope.actions.state")
       local line = action_state.get_current_line()
       require("telescope.builtin").find_files({ hidden = true, default_text = line })
