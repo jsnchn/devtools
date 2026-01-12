@@ -1,0 +1,37 @@
+theme = "onedark"
+
+[editor]
+line-number = "relative"
+mouse = true
+bufferline = "multiple"
+color-modes = true
+true-color = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+
+[editor.indent-guides]
+render = true
+
+[keys.normal]
+# Tmux-style window navigation (Ctrl + hjkl)
+C-h = "jump_view_left"
+C-j = "jump_view_down"
+C-k = "jump_view_up"
+C-l = "jump_view_right"
+
+# Quick save
+C-s = ":w"
+
+# Buffer navigation
+H = ":buffer-previous"
+L = ":buffer-next"

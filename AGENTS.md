@@ -9,17 +9,17 @@
 
 ## Code Style Guidelines
 - **Shell Scripts**: Use bash with `set -euo pipefail`, proper error handling
-- **Formatting**: 2 spaces for indentation (see stylua.toml for Lua)
+- **Formatting**: 2 spaces for indentation
 - **File Organization**: Keep dotfiles in `.devcontainer/dotfiles/`
 - **Error Handling**: Always check command success with `|| { echo "error"; exit 1; }`
 - **Logging**: Use tee for logging setup scripts to `/tmp/` directory
 
 ## Project Structure
 - `.devcontainer/`: Container configuration and setup scripts
-- `.devcontainer/dotfiles/`: User configuration files (zsh, tmux, nvim, etc.)
+- `.devcontainer/dotfiles/`: User configuration files (zsh, tmux, helix, etc.)
 - This is a development environment setup, not an application codebase
 
 ## Important Notes
 - Primary user is `jsnchn` (UID 1000)
 - Uses mise for version management, tmux for terminal multiplexing
-- Neovim with LazyVim is the primary editor
+- Helix is the primary editor

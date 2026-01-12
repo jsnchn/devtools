@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-# Install essential packages first (excluding neovim)
+# Install essential packages
 RUN apt-get update && apt-get install -y \
     git \
     gpg \
@@ -31,11 +31,12 @@ RUN curl https://mise.run | sh && \
     mv /root/.local/bin/mise /usr/local/bin/mise && \
     chmod +x /usr/local/bin/mise
 
-# Install latest Neovim
-RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz \
-    && tar -C /opt -xzf nvim-linux-x86_64.tar.gz \
-    && ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim \
-    && rm nvim-linux-x86_64.tar.gz
+# Install Helix editor
+RUN HELIX_VERSION=$(curl -s "https://api.github.com/repos/helix-editor/helix/releases/latest" | grep -Po '"tag_name": "\K[^"]*' || echo "24.07") \
+    && curl -Lo helix.tar.xz "https://github.com/helix-editor/helix/releases/download/${HELIX_VERSION}/helix-${HELIX_VERSION}-x86_64-linux.tar.xz" \
+    && tar -C /opt -xf helix.tar.xz \
+    && ln -sf /opt/helix-${HELIX_VERSION}-x86_64-linux/hx /usr/local/bin/hx \
+    && rm helix.tar.xz
 
 # Install lazygit
 RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*' || echo "0.40.2") \

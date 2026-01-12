@@ -39,10 +39,12 @@ git clone --depth 1 https://github.com/junegunn/fzf.git /root/.fzf
 echo "Installing mise tools..."
 cd /root && /usr/local/bin/mise install -y
 
-# Install Neovim dependencies after mise installs node/python
-echo "Installing Neovim dependencies..."
-export PATH="/root/.local/share/mise/shims:$PATH" && which npm && npm install -g neovim || echo "npm not available yet"
-export PATH="/root/.local/share/mise/shims:$PATH" && which python3 && pip3 install pynvim || echo "pip3 not available yet"
+# Set up Helix runtime (for grammars and themes)
+echo "Setting up Helix runtime..."
+if [ -d "/opt/helix-"*"-x86_64-linux/runtime" ]; then
+    export HELIX_RUNTIME=$(ls -d /opt/helix-*-x86_64-linux/runtime)
+    echo "HELIX_RUNTIME set to: $HELIX_RUNTIME"
+fi
 
 # Initialize tmux plugins
 echo "Initializing tmux plugins..."
@@ -57,7 +59,7 @@ echo "Verifying tool installations..."
 echo -n "git: "; which git && git --version || echo "NOT FOUND"
 echo -n "zsh: "; which zsh && zsh --version || echo "NOT FOUND"
 echo -n "tmux: "; which tmux && tmux -V || echo "NOT FOUND"
-echo -n "nvim: "; which nvim && nvim --version | head -1 || echo "NOT FOUND"
+echo -n "hx: "; which hx && hx --version || echo "NOT FOUND"
 echo -n "lazygit: "; which lazygit && lazygit --version | head -1 || echo "NOT FOUND"
 echo -n "fzf: "; test -f /root/.fzf/bin/fzf && /root/.fzf/bin/fzf --version || echo "NOT FOUND"
 echo -n "mise: "; which mise && mise --version || echo "NOT FOUND"

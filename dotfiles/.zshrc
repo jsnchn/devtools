@@ -4,8 +4,8 @@ export PATH="$HOME/.fzf/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # Set default editor
-export EDITOR="nvim"
-export VISUAL="nvim"
+export EDITOR="hx"
+export VISUAL="hx"
 
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
