@@ -76,6 +76,7 @@ alias lzg="lazygit"
 alias lzd="lazydocker"
 alias lt="npx localtunnel --subdomain jsnchn --port"
 alias air="~/go/bin/air"
+alias opencode="opencode upgrade && opencode"
 
 ###
 # mise-en-place
