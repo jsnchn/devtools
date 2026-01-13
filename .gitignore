@@ -1,6 +1,7 @@
 # Environment files
 .env
 .env.local
+.env.example
 
 # OS files
 .DS_Store
@@ -12,10 +13,22 @@ Thumbs.db
 *.swp
 *.swo
 *~
-.
+.#*
 
 # Log files
 logs/
 
-# Devpod files
-.devpod-internal/
+# Docker build cache (not devcontainer-base images)
+*.tar
+*.tar.xz
+
+# Devcontainer base images (tracked with LFS)
+!devcontainer-base-*.tar.gz
+
+# Build artifacts
+build-image.sh
+
+# Devcontainer
+.devcontainer-internal/
+.devcontainer/.env
+projects/template/.env

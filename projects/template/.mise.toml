@@ -1,0 +1,8 @@
+[env]
+MISE_GLOBAL_CONFIG_FILE=/usr/local/share/dotfiles/.config/mise/config.toml
+
+[tools]
+node = "20"
+python = "3.12"
+go = "latest"
+rust = "stable"

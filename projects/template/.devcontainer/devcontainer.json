@@ -1,0 +1,44 @@
+{
+  "name": "Project DevContainer",
+  "image": "devcontainer-base:latest",
+  "remoteUser": "jsnchn",
+  "remoteEnv": {
+    "TERM": "xterm-256color",
+    "EDITOR": "hx",
+    "VISUAL": "hx",
+    "PAGER": "less"
+  },
+  "postCreateCommand": "zsh /usr/local/share/setup-devcontainer.sh && mise install",
+  "containerEnv": {
+    "LANG": "en_US.UTF-8",
+    "LC_ALL": "en_US.UTF-8"
+  },
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/*.log": true,
+      "**/node_modules": true,
+      "**/.venv": true,
+      "**/__pycache__": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/.venv": true,
+      "**/__pycache__": true,
+      "**/.git": true
+    }
+  },
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/jsnchn/.ssh,type=bind",
+    "source=${localEnv:HOME}/.gitconfig,target=/home/jsnchn/.gitconfig,type=bind",
+    "source=${localEnv:HOME}/.aws,target=/home/jsnchn/.aws,type=bind",
+    "source=${localEnv:HOME}/.config/gh,target=/home/jsnchn/.config/gh,type=bind",
+    "source=${localEnv:HOME}/.env,target=/home/jsnchn/.env,type=bind,readonly=true"
+  ],
+  "workspaceFolder": "/workspaces/${localEnv:PROJECT_NAME}",
+  "workspaceMount": "source=${localEnv:${containerWorkspaceFolderFolderEnv:?PROJECT_FOLDER}},target=/workspaces/${localEnv:PROJECT_NAME},type=bind",
+  "postAttachCommand": "direnv allow || true",
+  "onAttachCommand": "zsh -c 'mise trust .mise.toml 2>/dev/null || true'"
+}

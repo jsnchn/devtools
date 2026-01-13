@@ -1,52 +1,123 @@
 # Portable Development Environment
 
-This repository contains a portable development environment based on Ubuntu 24.04 with all my development tools and configurations.
+A reusable devcontainer base stored in GitHub (with Git LFS). Simple and self-hosted.
 
-## Features
+## Quick Start
 
-- **Shell**: Zsh with custom configuration
-- **Terminal Multiplexer**: tmux with plugins
-- **Editor**: Helix
-- **Version Manager**: mise for managing development tools
-- **Git Tools**: git, lazygit
-- **Utilities**: curl, wget, ripgrep, fd-find, direnv, fzf
-
-## Usage
-
-### As a Standalone Project
-
-Open the project in any tool that supports devcontainers (VS Code, DevPod, etc.) and the development environment will be automatically configured with all tools and settings.
+### 1. Clone and Load Image
 
 ```bash
-# Using DevPod
-devpod up .
-
-# Or with a specific IDE
-devpod up --ide vscode .
+git clone https://github.com/yourusername/devcontainer.git
+cd devcontainer
+git lfs pull
+./build-image.sh --mode load
 ```
 
-### As a Git Subtree in Other Projects
-
-This repository is designed to be used as a git subtree in other projects. Add it to your project's `.devcontainer` directory:
+### 2. Create a New Project
 
 ```bash
-# Add as a subtree
-git subtree add --prefix=.devcontainer https://github.com/jsnchn/devcontainer.git main --squash
-
-# Update the subtree later
-git subtree pull --prefix=.devcontainer https://github.com/jsnchn/devcontainer.git main --squash
+# From THIS repo, copy the template to your new project
+cp -r projects/template /path/to/new/project/.devcontainer
 ```
 
-Then you can use DevPod from your project root:
+Or add as a git submodule:
+```bash
+git submodule add https://github.com/yourusername/devcontainer.git .devcontainer/base
+```
+
+### 3. Start Developing
 
 ```bash
-devpod up .
+cd /path/to/project
+docker compose -f .devcontainer/docker-compose.yml up -d
+docker exec -it project-devcontainer-1 zsh
 ```
 
-## Structure
+## One-Time Setup
 
-- `devcontainer.json` - Dev container configuration
-- `Dockerfile` - Container image definition
-- `setup-devcontainer.sh` - Post-create setup script
-- `dotfiles/` - Configuration files for various tools
-- `AGENTS.md` - Instructions for AI agents
+### Build and Save the Base Image
+
+```bash
+# Build and save as tarball
+./build-image.sh v1.0.0 --mode both
+
+# Add to Git LFS and push
+git lfs track "*.tar.gz"
+git add .gitattributes
+git add devcontainer-base-*.tar.gz
+git commit -m "Add devcontainer base image v1.0.0"
+git push
+```
+
+### On a New Server
+
+```bash
+git clone https://github.com/yourusername/devcontainer.git
+cd devcontainer
+git lfs pull
+./build-image.sh --mode load
+```
+
+## Project Structure
+
+```
+your-project/
+├── .devcontainer/
+│   ├── devcontainer.json      # Container config
+│   ├── Dockerfile             # Project-specific deps (optional)
+│   └── docker-compose.yml     # Local infra
+├── .mise.toml                 # Runtime versions
+├── .env                       # Environment variables
+└── src/
+```
+
+## Included Services
+
+- **PostgreSQL** (5432)
+- **Redis** (6379)
+- **Elasticsearch** (9200)
+- **MinIO** (9000/9001)
+
+## Customization
+
+### Add Project Dependencies
+
+Edit `.devcontainer/Dockerfile`:
+```dockerfile
+FROM devcontainer-base:latest
+
+RUN apt-get install -y postgresql-client redis-tools
+```
+
+### Configure Runtimes
+
+Edit `.mise.toml`:
+```toml
+[tools]
+node = "20"
+python = "3.12"
+go = "1.21"
+```
+
+### Environment Variables
+
+Copy and edit `.env`:
+```bash
+cp .env.example .env
+```
+
+## Commands
+
+```bash
+# Build image locally
+./build-image.sh v1.0.0
+
+# Build and save
+./build-image.sh v1.0.0 --mode both
+
+# Save existing image
+./build-image.sh v1.0.0 --mode save
+
+# Load from tarball
+./build-image.sh v1.0.0 --mode load
+```
