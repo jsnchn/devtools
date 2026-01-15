@@ -94,7 +94,7 @@ check_github_token() {
     warn "GitHub MCP server is configured but needs a token."
     echo ""
     echo -e "${YELLOW}To get a GitHub Personal Access Token:${NC}"
-    echo "  1. Go to: https://github.com/settings/tokens"
+    echo "  1. Go to: https://github.com/settings/personal-access-tokens
     echo "  2. Click 'Generate new token (classic)'"
     echo "  3. Select scopes: 'repo' and 'workflow'"
     echo "  4. Copy the token and update: $config_file"
