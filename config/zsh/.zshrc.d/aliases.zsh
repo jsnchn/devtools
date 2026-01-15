@@ -10,4 +10,5 @@ alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 # Devtools management
 alias devtools="cd ~/.devtools"
-alias devtools-update="cd ~/.devtools && git pull && ./install.sh"
+alias devtools-up="cd ~/.devtools && git add -A && git commit -m 'update configs' && git push"
+alias devtools-down="cd ~/.devtools && git pull && ./install.sh"

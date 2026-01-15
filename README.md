@@ -16,17 +16,14 @@ This will:
 5. Set zsh as default shell
 6. Install language runtimes via mise (node, python, go)
 
-## Updating
-
-After making changes to configurations, distribute to other machines:
+## Syncing Changes
 
 ```bash
-# On machine where you made changes
-cd ~/.devtools && git add -A && git commit -m "update configs" && git push
+# Push config changes from current machine
+devtools-up
 
-# On other machines
-devtools-update
-# or: cd ~/.devtools && git pull && ./install.sh
+# Pull updates on other machines
+devtools-down
 ```
 
 ## What's Included

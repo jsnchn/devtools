@@ -134,7 +134,8 @@ main() {
   echo "======================================"
   echo ""
   info "Please restart your shell or run: source ~/.zshrc"
-  info "To update later, run: devtools-update"
+  info "To push config changes: devtools-up"
+  info "To pull updates: devtools-down"
   echo ""
 }
 
