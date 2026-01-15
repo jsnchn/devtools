@@ -59,9 +59,13 @@ main() {
   mkdir -p "$XDG_CONFIG_HOME/mise"
   link_file "$DEVTOOLS_DIR/config/mise/config.toml" "$XDG_CONFIG_HOME/mise/config.toml"
 
-  # OpenCode
+  # OpenCode - merge template with local config
   mkdir -p "$XDG_CONFIG_HOME/opencode"
-  link_file "$DEVTOOLS_DIR/config/opencode/config.json" "$XDG_CONFIG_HOME/opencode/config.json"
+  "$DEVTOOLS_DIR/scripts/merge-opencode-config.sh" \
+    "$DEVTOOLS_DIR/config/opencode/config.json.template" \
+    "$DEVTOOLS_DIR/config/opencode/config.local.json" \
+    "$XDG_CONFIG_HOME/opencode/config.json"
+  info "Generated opencode config: $XDG_CONFIG_HOME/opencode/config.json"
 
   # Default npm packages (for mise node)
   link_file "$DEVTOOLS_DIR/config/mise/.default-npm-packages" "$HOME/.default-npm-packages"

@@ -85,21 +85,44 @@ clone_or_update_repo() {
 }
 
 check_github_token() {
-  local config_file="$DEVTOOLS_DIR/config/opencode/config.json"
-  if [[ ! -f "$config_file" ]]; then
+  local template_file="$DEVTOOLS_DIR/config/opencode/config.json.template"
+  local local_file="$DEVTOOLS_DIR/config/opencode/config.local.json"
+  local merged_file="$XDG_CONFIG_HOME/opencode/config.json"
+
+  if [[ ! -f "$template_file" ]]; then
     return 0
   fi
 
-  if grep -q "YOUR_GITHUB_TOKEN_HERE" "$config_file"; then
-    warn "GitHub MCP server is configured but needs a token."
+  if [[ ! -f "$local_file" ]]; then
+    cp "$template_file" "$local_file"
+    warn "GitHub MCP server needs a token."
     echo ""
     echo -e "${YELLOW}To get a GitHub Personal Access Token:${NC}"
-    echo "  1. Go to: https://github.com/settings/personal-access-tokens"
+    echo "  1. Go to: https://github.com/settings/tokens"
     echo "  2. Click 'Generate new token (classic)'"
     echo "  3. Select scopes: 'repo' and 'workflow'"
-    echo "  4. Copy the token and update: $config_file"
     echo ""
-    read -p "Press Enter after you've added your token, or Ctrl+C to skip..."
+    read -p "Enter your GitHub token: " token
+    if [[ -n "$token" ]]; then
+      jq --arg token "$token" '.mcp.github.env.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
+      "$DEVTOOLS_DIR/scripts/merge-opencode-config.sh" "$template_file" "$local_file" "$merged_file"
+      info "Token saved and config merged."
+    fi
+    return 0
+  fi
+
+  if grep -q "YOUR_GITHUB_TOKEN_HERE" "$local_file" 2>/dev/null; then
+    warn "GitHub token is still a placeholder."
+    echo ""
+    echo -e "${YELLOW}To update your token:${NC}"
+    echo "  Edit: $local_file"
+    echo ""
+    read -p "Enter your GitHub token (or press Enter to skip): " token
+    if [[ -n "$token" ]]; then
+      jq --arg token "$token" '.mcp.github.env.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
+      "$DEVTOOLS_DIR/scripts/merge-opencode-config.sh" "$template_file" "$local_file" "$merged_file"
+      info "Token updated and config merged."
+    fi
   fi
 }
 
