@@ -169,16 +169,11 @@ main() {
   echo "       Installation Complete!         "
   echo "======================================"
   echo ""
-  info "Sourcing ~/.zshrc to load devtools..."
-  if source ~/.zshrc 2>/dev/null; then
-    info "To push config changes: devtools-up"
-    info "To pull updates: devtools-down"
-  else
-    warn "Could not source ~/.zshrc - please run: source ~/.zshrc"
-    info "To push config changes: devtools-up"
-    info "To pull updates: devtools-down"
-  fi
+  info "To push config changes: devtools-up"
+  info "To pull updates: devtools-down"
   echo ""
+  info "Sourcing ~/.zshrc to load devtools..."
+  source ~/.zshrc
 }
 
 main "$@"
