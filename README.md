@@ -1,123 +1,103 @@
-# Portable Development Environment
+# Devtools
 
-A reusable devcontainer base stored in GitHub (with Git LFS). Simple and self-hosted.
+Cross-platform dev environment setup for macOS and Linux. One command to set up a new machine.
 
 ## Quick Start
 
-### 1. Clone and Load Image
+```bash
+curl -fsSL https://raw.githubusercontent.com/jsnchn/devtools/main/install.sh | bash
+```
+
+This will:
+1. Install prerequisites (Homebrew on macOS, git on Linux)
+2. Clone the repo to `~/.devtools`
+3. Install packages (zsh, tmux, helix, lazygit, fzf, mise, etc.)
+4. Symlink configs to home directory
+5. Set zsh as default shell
+6. Install language runtimes via mise (node, python, go)
+
+## Updating
+
+After making changes to configurations, distribute to other machines:
 
 ```bash
-git clone https://github.com/yourusername/devcontainer.git
-cd devcontainer
-git lfs pull
-./build-image.sh --mode load
+# On machine where you made changes
+cd ~/.devtools && git add -A && git commit -m "update configs" && git push
+
+# On other machines
+devtools-update
+# or: cd ~/.devtools && git pull && ./install.sh
 ```
 
-### 2. Create a New Project
+## What's Included
+
+### Tools
+- **zsh** - Shell with git-aware prompt
+- **tmux** - Terminal multiplexer (Ctrl+Space prefix)
+- **helix** - Modal text editor
+- **mise** - Runtime version manager (node, python, go)
+- **fzf** - Fuzzy finder
+- **lazygit** - Terminal UI for git
+- **ripgrep** - Fast search
+- **fd** - Fast file finder
+- **direnv** - Directory-based environment variables
+
+### Configurations
+- `config/zsh/` - Shell configuration (modular via .zshrc.d/)
+- `config/tmux/` - Tmux with vim-style navigation
+- `config/helix/` - Helix editor with onedark theme
+- `config/mise/` - Language runtime versions
+
+## Structure
+
+```
+~/.devtools/
+├── install.sh              # Bootstrap script
+├── scripts/
+│   ├── install-packages.sh # System packages
+│   ├── install-tools.sh    # Additional tools
+│   ├── link-dotfiles.sh    # Symlink manager
+│   └── setup-shell.sh      # Shell configuration
+├── config/
+│   ├── zsh/
+│   │   ├── .zshrc
+│   │   ├── .zprofile
+│   │   └── .zshrc.d/       # Modular configs
+│   ├── tmux/.tmux.conf
+│   ├── helix/config.toml
+│   ├── mise/config.toml
+│   └── opencode/config.json
+└── infrastructure/         # Optional Docker services
+    └── docker-compose.yml
+```
+
+## Infrastructure (Optional)
+
+Local development services via Docker:
 
 ```bash
-# From THIS repo, copy the template to your new project
-cp -r projects/template /path/to/new/project/.devcontainer
+cd ~/.devtools/infrastructure
+cp .env.example .env
+docker-compose up -d
 ```
 
-Or add as a git submodule:
-```bash
-git submodule add https://github.com/yourusername/devcontainer.git .devcontainer/base
-```
-
-### 3. Start Developing
-
-```bash
-cd /path/to/project
-docker compose -f .devcontainer/docker-compose.yml up -d
-docker exec -it project-devcontainer-1 zsh
-```
-
-## One-Time Setup
-
-### Build and Save the Base Image
-
-```bash
-# Build and save as tarball
-./build-image.sh v1.0.0 --mode both
-
-# Add to Git LFS and push
-git lfs track "*.tar.gz"
-git add .gitattributes
-git add devcontainer-base-*.tar.gz
-git commit -m "Add devcontainer base image v1.0.0"
-git push
-```
-
-### On a New Server
-
-```bash
-git clone https://github.com/yourusername/devcontainer.git
-cd devcontainer
-git lfs pull
-./build-image.sh --mode load
-```
-
-## Project Structure
-
-```
-your-project/
-├── .devcontainer/
-│   ├── devcontainer.json      # Container config
-│   ├── Dockerfile             # Project-specific deps (optional)
-│   └── docker-compose.yml     # Local infra
-├── .mise.toml                 # Runtime versions
-├── .env                       # Environment variables
-└── src/
-```
-
-## Included Services
-
-- **PostgreSQL** (5432)
-- **Redis** (6379)
-- **Elasticsearch** (9200)
-- **MinIO** (9000/9001)
+Services: PostgreSQL (5432), Redis (6379), Elasticsearch (9200), MinIO (9000)
 
 ## Customization
 
-### Add Project Dependencies
+### Add a new tool
 
-Edit `.devcontainer/Dockerfile`:
-```dockerfile
-FROM devcontainer-base:latest
+1. Add to `scripts/install-packages.sh` (brew/apt)
+2. Or add to `scripts/install-tools.sh` (manual install)
+3. Run `./install.sh` to apply
 
-RUN apt-get install -y postgresql-client redis-tools
-```
+### Add a new config
 
-### Configure Runtimes
+1. Add file to `config/` directory
+2. Update `scripts/link-dotfiles.sh` to symlink it
+3. Run `./install.sh` to apply
 
-Edit `.mise.toml`:
-```toml
-[tools]
-node = "20"
-python = "3.12"
-go = "1.21"
-```
+### Add platform-specific settings
 
-### Environment Variables
-
-Copy and edit `.env`:
-```bash
-cp .env.example .env
-```
-
-## Commands
-
-```bash
-# Build image locally
-./build-image.sh v1.0.0
-
-# Build and save
-./build-image.sh v1.0.0 --mode both
-
-# Save existing image
-./build-image.sh v1.0.0 --mode save
-
-# Load from tarball
-./build-image.sh v1.0.0 --mode load
-```
+- macOS: Edit `config/zsh/.zshrc.d/macos.zsh`
+- Linux: Edit `config/zsh/.zshrc.d/linux.zsh`

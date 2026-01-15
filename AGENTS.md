@@ -1,28 +1,30 @@
-# Agent Instructions for DevContainer Repository
+# Agent Instructions for Devtools Repository
 
-## Build/Test Commands
-- **Build base image**: `./build-image.sh <version> [latest]`
-- **Push base image**: `PUSH=true ./build-image.sh <version>`
-- **Test container locally**: `docker build -t test-devcontainer . && docker run -it test-devcontainer zsh`
-- **No test framework detected** - Ask user for test commands if needed
+## Commands
+- **Install/Update**: `./install.sh`
+- **Test on macOS**: Run `./install.sh` locally
+- **Test on Linux**: `docker run -it ubuntu:24.04 bash` then curl the install script
+- **No test framework** - Ask user for test commands if needed
 - **Git Version Control** - Never commit or push without permission
 
 ## Code Style Guidelines
 - **Shell Scripts**: Use bash with `set -euo pipefail`, proper error handling
 - **Formatting**: 2 spaces for indentation
-- **File Organization**: Keep dotfiles in `dotfiles/`, project templates in `projects/template/`
-- **Error Handling**: Always check command success with `|| { echo "error"; exit 1; }`
-- **Logging**: Use tee for logging setup scripts to `/tmp/` directory
+- **File Organization**: Configs in `config/`, scripts in `scripts/`
+- **Error Handling**: Always check command success
+- **Idempotent**: All scripts must be safe to run multiple times
 
 ## Project Structure
-- `.devcontainer/`: Base container configuration
-- `.devcontainer/Dockerfile`: Base image definition (published to GHCR)
-- `projects/template/`: Per-project devcontainer template with local infrastructure
-- `dotfiles/`: User configuration files (zsh, tmux, helix, mise, etc.)
+- `install.sh`: Main bootstrap script (curl-able)
+- `scripts/`: Installation helper scripts
+- `config/`: All configuration files (symlinked to home)
+- `config/zsh/.zshrc.d/`: Modular zsh configs
+- `infrastructure/`: Optional Docker services
 
 ## Important Notes
-- Primary user is `jsnchn` (UID 1000)
-- Uses mise for version management, tmux for terminal multiplexing
+- Primary user is `jsnchn`
+- Supports both macOS (Homebrew) and Linux (apt)
+- Uses mise for version management
 - Helix is the primary editor
-- Base image is published to `ghcr.io/{user}/devcontainer-base`
-- Project template includes docker-compose with PostgreSQL, Redis, Elasticsearch, MinIO
+- All configs are symlinked, not copied
+- `devtools-update` alias for easy updates
