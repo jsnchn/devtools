@@ -95,6 +95,19 @@ main() {
   OS=$(detect_os)
   info "Detected OS: $OS"
 
+  # Pre-authenticate sudo on Linux to avoid multiple password prompts
+  if [[ "$OS" == "linux" ]]; then
+    info "Requesting sudo access (you may be prompted for your password)..."
+    if sudo -v; then
+      # Keep sudo session alive in the background
+      (while true; do sudo -n true; sleep 50; kill -0 "$$" 2>/dev/null || exit; done) &
+      SUDO_KEEPALIVE_PID=$!
+      trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null' EXIT
+    else
+      warn "Could not obtain sudo access. Some steps may fail."
+    fi
+  fi
+
   # Step 1: Install prerequisites (git, brew on macOS)
   step "Installing prerequisites..."
   if [[ "$OS" == "macos" ]]; then
