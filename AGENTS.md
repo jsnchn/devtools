@@ -5,7 +5,7 @@
 - **Test on macOS**: Run `./install.sh` locally
 - **Test on Linux**: `docker run -it ubuntu:24.04 bash` then curl the install script
 - **No test framework** - Ask user for test commands if needed
-- **Git Version Control** - Never commit or push without permission
+- **Git Version Control** - Never commit or push without permission. Commit author should always be the user only (no co-authored-by lines)
 
 ## Code Style Guidelines
 - **Shell Scripts**: Use bash with `set -euo pipefail`, proper error handling
