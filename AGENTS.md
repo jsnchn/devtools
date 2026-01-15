@@ -9,7 +9,7 @@
 
 ## Code Style Guidelines
 - **Shell Scripts**: Use bash with `set -euo pipefail`, proper error handling
-- **Formatting**: 2 spaces for indentation
+- **Formatting**: Tabs for indentation
 - **File Organization**: Configs in `config/`, scripts in `scripts/`
 - **Error Handling**: Always check command success
 - **Idempotent**: All scripts must be safe to run multiple times
