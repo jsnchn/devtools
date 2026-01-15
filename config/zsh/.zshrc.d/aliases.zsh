@@ -3,10 +3,12 @@
 alias ll="ls -al"
 alias lzg="lazygit"
 alias lzd="lazydocker"
-alias lt="npx localtunnel --subdomain jsnchn --port"
-alias air="~/go/bin/air"
 alias opencode="opencode upgrade && opencode"
-alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+
+# Tailscale CLI (macOS uses app bundle, Linux has it in PATH)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+fi
 
 # Devtools management
 alias devtools="cd ~/.devtools"
