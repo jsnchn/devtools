@@ -104,14 +104,14 @@ check_github_token() {
     echo ""
     read -p "Enter your GitHub token: " token
     if [[ -n "$token" ]]; then
-      jq --arg token "$token" '.mcp.github.env.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
+      jq --arg token "$token" '.mcp.github.environment.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
       "$DEVTOOLS_DIR/scripts/merge-opencode-config.sh" "$template_file" "$local_file" "$merged_file"
       info "Token saved and config merged."
     fi
     return 0
   fi
 
-  if grep -q "YOUR_GITHUB_TOKEN_HERE" "$local_file" 2>/dev/null; then
+  if grep -q "your-token-here" "$local_file" 2>/dev/null; then
     warn "GitHub token is still a placeholder."
     echo ""
     echo -e "${YELLOW}To update your token:${NC}"
@@ -119,7 +119,7 @@ check_github_token() {
     echo ""
     read -p "Enter your GitHub token (or press Enter to skip): " token
     if [[ -n "$token" ]]; then
-      jq --arg token "$token" '.mcp.github.env.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
+      jq --arg token "$token" '.mcp.github.environment.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
       "$DEVTOOLS_DIR/scripts/merge-opencode-config.sh" "$template_file" "$local_file" "$merged_file"
       info "Token updated and config merged."
     fi

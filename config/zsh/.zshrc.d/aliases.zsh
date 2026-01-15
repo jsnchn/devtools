@@ -12,7 +12,7 @@ fi
 
 # Devtools management
 alias devtools="cd ~/.devtools"
-alias devtools-up="(cd ~/.devtools && git add -A -- ':!config/opencode/config.local.json' && git commit -m 'update configs' && git push)"
+alias devtools-up="(cd ~/.devtools && git add -A -- ':!config/opencode/config.local.json' && git commit -m 'update configs' && git push --force)"
 devtools-down() {
   cd ~/.devtools
   git fetch origin
