@@ -4,7 +4,7 @@ set -euo pipefail
 # Devtools bootstrap script
 # Usage: curl -fsSL https://raw.githubusercontent.com/jsnchn/devtools/main/install.sh | bash
 
-DEVTOOLS_REPO="https://github.com/jsnchn/devtools.git"
+DEVTOOLS_REPO="git@github.com:jsnchn/devtools.git"
 DEVTOOLS_DIR="${HOME}/.devtools"
 
 # Colors
