@@ -84,6 +84,25 @@ clone_or_update_repo() {
   fi
 }
 
+check_github_token() {
+  local config_file="$DEVTOOLS_DIR/config/opencode/config.json"
+  if [[ ! -f "$config_file" ]]; then
+    return 0
+  fi
+
+  if grep -q "YOUR_GITHUB_TOKEN_HERE" "$config_file"; then
+    warn "GitHub MCP server is configured but needs a token."
+    echo ""
+    echo -e "${YELLOW}To get a GitHub Personal Access Token:${NC}"
+    echo "  1. Go to: https://github.com/settings/tokens"
+    echo "  2. Click 'Generate new token (classic)'"
+    echo "  3. Select scopes: 'repo' and 'workflow'"
+    echo "  4. Copy the token and update: $config_file"
+    echo ""
+    read -p "Press Enter after you've added your token, or Ctrl+C to skip..."
+  fi
+}
+
 main() {
   echo ""
   echo "======================================"
@@ -133,7 +152,11 @@ main() {
   step "Setting up shell..."
   "$DEVTOOLS_DIR/scripts/setup-shell.sh"
 
-  # Step 4: Install mise runtimes
+  # Step 4: Check for GitHub MCP token
+  step "Checking GitHub MCP configuration..."
+  check_github_token
+
+  # Step 5: Install mise runtimes
   step "Installing language runtimes via mise..."
   if command -v mise &>/dev/null; then
     mise install -y || warn "mise install failed, you can run 'mise install' manually later"

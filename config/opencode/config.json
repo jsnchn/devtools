@@ -2,5 +2,13 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "ayu",
   "autoupdate": true,
-  "mcp": {}
+  "mcp": {
+    "github": {
+      "command": "uvx",
+      "args": ["mcp-server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_TOKEN_HERE"
+      }
+    }
+  }
 }

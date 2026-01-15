@@ -30,6 +30,16 @@ install_mise() {
   curl -fsSL https://mise.run | sh
 }
 
+install_uv() {
+  if command -v uv &>/dev/null; then
+    info "uv is already installed"
+    return
+  fi
+
+  info "Installing uv..."
+  curl -fsSL https://astral.sh/uv/install.sh | sh
+}
+
 install_fzf() {
   # On macOS, fzf is installed via brew
   if [[ "$OS" == "macos" ]]; then
@@ -131,6 +141,9 @@ main() {
 
   # mise (version manager)
   install_mise
+
+  # uv (Python package runner, used for MCP servers)
+  install_uv
 
   # fzf (Linux only, macOS uses brew)
   install_fzf
