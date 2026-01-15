@@ -13,4 +13,14 @@ fi
 # Devtools management
 alias devtools="cd ~/.devtools"
 alias devtools-up="(cd ~/.devtools && git add -A && git commit -m 'update configs' && git push)"
-alias devtools-down="(cd ~/.devtools && git pull && ./install.sh)"
+devtools-down() {
+  cd ~/.devtools
+  git fetch origin
+  local status
+  status=$(git rev-list --count --right-only HEAD..origin/main 2>/dev/null || echo "0")
+  if [[ "$status" == "0" ]]; then
+    echo "Already up to date."
+  else
+    git pull && ./install.sh
+  fi
+}
