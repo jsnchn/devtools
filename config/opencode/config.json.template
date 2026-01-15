@@ -4,10 +4,10 @@
   "autoupdate": true,
   "mcp": {
     "github": {
-      "command": "uvx",
-      "args": ["mcp-server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_TOKEN_HERE"
+      "type": "local",
+      "command": ["uvx", "mcp-server-github"],
+      "environment": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your-token-here"
       }
     }
   }
