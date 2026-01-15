@@ -173,7 +173,7 @@ main() {
   info "To pull updates: devtools-down"
   echo ""
   info "Sourcing ~/.zshrc to load devtools..."
-  source ~/.zshrc
+  zsh -c "source ~/.zshrc"
 }
 
 main "$@"
