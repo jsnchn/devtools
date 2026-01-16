@@ -3,6 +3,15 @@
 .env.local
 .env.example
 
+# Syncthing and watcher
+.stfolder/
+.stignore
+.devtools-watch-state
+.devtools-watch.log
+
+# Configs with secrets (add specific files here, they sync via Syncthing)
+# Example: config/opencode/config.json
+
 # OS files
 .DS_Store
 Thumbs.db

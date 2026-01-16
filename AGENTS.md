@@ -27,4 +27,5 @@
 - Uses mise for version management
 - Helix is the primary editor
 - All configs are symlinked, not copied
-- `devtools-update` alias for easy updates
+- Uses Syncthing for automatic config sync between machines
+- `devtools-sync` command to push/pull package changes

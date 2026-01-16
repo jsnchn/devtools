@@ -31,6 +31,7 @@ install_macos_packages() {
     mise
     helix
     lazygit
+    syncthing
   )
 
   info "Installing packages: ${packages[*]}"
@@ -60,6 +61,7 @@ install_linux_packages() {
       wget
       build-essential
       unzip
+      syncthing
     )
 
     info "Installing packages: ${packages[*]}"
@@ -84,6 +86,7 @@ install_linux_packages() {
       gcc
       make
       unzip
+      syncthing
     )
 
     info "Installing packages: ${packages[*]}"
@@ -102,6 +105,7 @@ install_linux_packages() {
       wget
       base-devel
       unzip
+      syncthing
     )
 
     info "Installing packages: ${packages[*]}"

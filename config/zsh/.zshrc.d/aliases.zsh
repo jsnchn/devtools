@@ -12,34 +12,30 @@ fi
 
 # Devtools management
 alias devtools="cd ~/.devtools"
-alias devtools-up="(cd ~/.devtools && git add -A -- ':!config/opencode/config.local.json' && git commit -m 'update configs' && git push --force)"
-devtools-down() {
-  cd ~/.devtools
-  git fetch origin
-  local status
-  status=$(git rev-list --count --right-only HEAD..origin/main 2>/dev/null || echo "0")
 
-  if [[ "$status" == "0" ]]; then
-    echo "Already up to date."
-    return
-  fi
+function devtools-sync {
+  (
+    cd ~/.devtools || exit 1
 
-  # Backup current merged configs
-  BACKUP_DIR="$HOME/.devtools-backup-$(date +%Y%m%d-%H%M%S)"
-  mkdir -p "$BACKUP_DIR"
-  cp -r ~/.config/opencode/* "$BACKUP_DIR/" 2>/dev/null || true
+    # Push local changes if any
+    if [[ -n $(git status --porcelain) ]]; then
+      echo "[sync] Pushing local changes..."
+      git add -A
+      git commit -m "update devtools"
+      git push
+    fi
 
-  # Show what changed in templates
-  echo ""
-  echo "Changes in opencode config template:"
-  git diff HEAD..origin/main -- config/opencode/config.json.template || echo "No template changes"
-
-  echo ""
-  read -p "Proceed with update? [y/N] " confirm
-  if [[ "$confirm" =~ ^[Yy]$ ]]; then
-    git pull && ./install.sh
-    echo "Configs backed up to: $BACKUP_DIR"
-  else
-    echo "Update cancelled."
-  fi
+    # Pull remote changes if any
+    git fetch origin
+    local behind
+    behind=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo "0")
+    if [[ "$behind" != "0" ]]; then
+      echo "[sync] Pulling $behind commit(s)..."
+      git pull --rebase
+      echo "[sync] Running install..."
+      ./install.sh
+    else
+      echo "[sync] Already up to date."
+    fi
+  )
 }

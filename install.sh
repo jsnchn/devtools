@@ -4,7 +4,8 @@ set -euo pipefail
 # Devtools bootstrap script
 # Usage: curl -fsSL https://raw.githubusercontent.com/jsnchn/devtools/main/install.sh | bash
 
-DEVTOOLS_REPO="git@github.com:jsnchn/devtools.git"
+DEVTOOLS_REPO_SSH="git@github.com:jsnchn/devtools.git"
+DEVTOOLS_REPO_HTTPS="https://github.com/jsnchn/devtools.git"
 DEVTOOLS_DIR="${HOME}/.devtools"
 
 # Colors
@@ -80,11 +81,31 @@ clone_or_update_repo() {
     git pull --rebase origin main || git pull origin main
   else
     info "Cloning devtools repository..."
-    git clone "$DEVTOOLS_REPO" "$DEVTOOLS_DIR"
+    # Try SSH first (for push access), fall back to HTTPS
+    if git clone "$DEVTOOLS_REPO_SSH" "$DEVTOOLS_DIR" 2>/dev/null; then
+      info "Cloned via SSH"
+    else
+      info "SSH failed, using HTTPS..."
+      git clone "$DEVTOOLS_REPO_HTTPS" "$DEVTOOLS_DIR"
+    fi
   fi
 }
 
+start_syncthing() {
+  local os="$1"
+  if [[ "$os" == "macos" ]]; then
+    if command -v brew &>/dev/null; then
+      brew services start syncthing 2>/dev/null || true
+    fi
+  else
+    if command -v systemctl &>/dev/null; then
+      systemctl --user enable syncthing 2>/dev/null || true
+      systemctl --user start syncthing 2>/dev/null || true
+    fi
+  fi
 }
+
+main() {
   echo ""
   echo "======================================"
   echo "       Devtools Bootstrap Script      "
@@ -141,16 +162,22 @@ clone_or_update_repo() {
     "$HOME/.local/bin/mise" install -y || warn "mise install failed"
   fi
 
+  # Step 5: Start Syncthing for config synchronization
+  step "Starting Syncthing..."
+  start_syncthing "$OS"
+
+  # Step 6: Start devtools watcher for auto-install on sync
+  step "Starting devtools watcher..."
+  "$DEVTOOLS_DIR/scripts/setup-watcher.sh"
+
   echo ""
   echo "======================================"
   echo "       Installation Complete!         "
   echo "======================================"
   echo ""
-  info "To push config changes: devtools-up"
-  info "To pull updates: devtools-down"
+  info "Syncthing UI: http://localhost:8384"
+  info "To sync changes: devtools-sync"
   echo ""
-  info "Sourcing ~/.zshrc to load devtools..."
-  zsh -c "source ~/.zshrc"
 }
 
 main "$@"
