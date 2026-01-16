@@ -16,3 +16,11 @@ export PATH="$PATH:$GOPATH/bin"
 
 # fzf from git install
 export PATH="$HOME/.fzf/bin:$PATH"
+
+# fzf shell integration (completion and key-bindings)
+if [[ -f "$HOME/.fzf/shell/completion.zsh" ]]; then
+	source "$HOME/.fzf/shell/completion.zsh"
+fi
+if [[ -f "$HOME/.fzf/shell/key-bindings.zsh" ]]; then
+	source "$HOME/.fzf/shell/key-bindings.zsh"
+fi

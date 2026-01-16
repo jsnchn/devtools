@@ -17,13 +17,17 @@ export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="hx"
 export VISUAL="hx"
 
-# History search with arrow keys
+# History search with arrow keys (terminal-agnostic)
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search
-bindkey "^[[B" down-line-or-beginning-search
+
+# Bind both normal mode and application mode sequences
+bindkey "${terminfo[kcuu1]:-^[[A}" up-line-or-beginning-search
+bindkey "${terminfo[kcud1]:-^[[B}" down-line-or-beginning-search
+bindkey "^[OA" up-line-or-beginning-search
+bindkey "^[OB" down-line-or-beginning-search
 
 # Source modular configurations
 if [[ -d "$DEVTOOLS_DIR/config/zsh/.zshrc.d" ]]; then
