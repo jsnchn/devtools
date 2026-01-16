@@ -84,49 +84,7 @@ clone_or_update_repo() {
   fi
 }
 
-check_github_token() {
-  local template_file="$DEVTOOLS_DIR/config/opencode/config.json.template"
-  local local_file="$DEVTOOLS_DIR/config/opencode/config.local.json"
-  local merged_file="$XDG_CONFIG_HOME/opencode/config.json"
-
-  if [[ ! -f "$template_file" ]]; then
-    return 0
-  fi
-
-  if [[ ! -f "$local_file" ]]; then
-    cp "$template_file" "$local_file"
-    warn "GitHub MCP server needs a token."
-    echo ""
-    echo -e "${YELLOW}To get a GitHub Personal Access Token:${NC}"
-    echo "  1. Go to: https://github.com/settings/tokens"
-    echo "  2. Click 'Generate new token (classic)'"
-    echo "  3. Select scopes: 'repo' and 'workflow'"
-    echo ""
-    read -p "Enter your GitHub token: " token
-    if [[ -n "$token" ]]; then
-      jq --arg token "$token" '.mcp.github.environment.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
-      "$DEVTOOLS_DIR/scripts/merge-opencode-config.sh" "$template_file" "$local_file" "$merged_file"
-      info "Token saved and config merged."
-    fi
-    return 0
-  fi
-
-  if grep -q "your-token-here" "$local_file" 2>/dev/null; then
-    warn "GitHub token is still a placeholder."
-    echo ""
-    echo -e "${YELLOW}To update your token:${NC}"
-    echo "  Edit: $local_file"
-    echo ""
-    read -p "Enter your GitHub token (or press Enter to skip): " token
-    if [[ -n "$token" ]]; then
-      jq --arg token "$token" '.mcp.github.environment.GITHUB_PERSONAL_ACCESS_TOKEN = $token' "$local_file" > "${local_file}.tmp" && mv "${local_file}.tmp" "$local_file"
-      "$DEVTOOLS_DIR/scripts/merge-opencode-config.sh" "$template_file" "$local_file" "$merged_file"
-      info "Token updated and config merged."
-    fi
-  fi
 }
-
-main() {
   echo ""
   echo "======================================"
   echo "       Devtools Bootstrap Script      "
@@ -175,11 +133,7 @@ main() {
   step "Setting up shell..."
   "$DEVTOOLS_DIR/scripts/setup-shell.sh"
 
-  # Step 4: Check for GitHub MCP token
-  step "Checking GitHub MCP configuration..."
-  check_github_token
-
-  # Step 5: Install mise runtimes
+  # Step 4: Install mise runtimes
   step "Installing language runtimes via mise..."
   if command -v mise &>/dev/null; then
     mise install -y || warn "mise install failed, you can run 'mise install' manually later"
