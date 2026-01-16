@@ -33,10 +33,13 @@ main() {
   # Change default shell
   if [[ "$SHELL" != "$zsh_path" ]]; then
     info "Setting zsh as default shell..."
+    # Try without sudo first (works on macOS), then with sudo (needed on Linux)
     if chsh -s "$zsh_path" 2>/dev/null; then
       info "Default shell changed to zsh"
+    elif sudo chsh -s "$zsh_path" "$USER" 2>/dev/null; then
+      info "Default shell changed to zsh (via sudo)"
     else
-      warn "Could not change default shell. Run manually: chsh -s $zsh_path"
+      warn "Could not change default shell. Run manually: sudo chsh -s $zsh_path $USER"
     fi
   fi
 }
