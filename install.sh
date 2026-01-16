@@ -91,6 +91,18 @@ clone_or_update_repo() {
   fi
 }
 
+setup_git_config() {
+  # Set git identity if not already configured
+  if [[ -z "$(git config --global user.email 2>/dev/null)" ]]; then
+    info "Setting git user.email..."
+    git config --global user.email "jchen.json@gmail.com"
+  fi
+  if [[ -z "$(git config --global user.name 2>/dev/null)" ]]; then
+    info "Setting git user.name..."
+    git config --global user.name "Jason Chen"
+  fi
+}
+
 start_syncthing() {
   local os="$1"
   if [[ "$os" == "macos" ]]; then
@@ -137,11 +149,15 @@ main() {
     install_prerequisites_linux
   fi
 
-  # Step 2: Clone or update repository
+  # Step 2: Configure git identity
+  step "Configuring git..."
+  setup_git_config
+
+  # Step 3: Clone or update repository
   step "Setting up devtools repository..."
   clone_or_update_repo
 
-  # Step 3: Run installation scripts
+  # Step 4: Run installation scripts
   step "Installing packages..."
   "$DEVTOOLS_DIR/scripts/install-packages.sh" "$OS"
 
@@ -154,7 +170,7 @@ main() {
   step "Setting up shell..."
   "$DEVTOOLS_DIR/scripts/setup-shell.sh"
 
-  # Step 4: Install mise runtimes
+  # Step 5: Install mise runtimes
   step "Installing language runtimes via mise..."
   if command -v mise &>/dev/null; then
     mise install -y || warn "mise install failed, you can run 'mise install' manually later"
@@ -162,11 +178,11 @@ main() {
     "$HOME/.local/bin/mise" install -y || warn "mise install failed"
   fi
 
-  # Step 5: Start Syncthing for config synchronization
+  # Step 6: Start Syncthing for config synchronization
   step "Starting Syncthing..."
   start_syncthing "$OS"
 
-  # Step 6: Start devtools watcher for auto-install on sync
+  # Step 7: Start devtools watcher for auto-install on sync
   step "Starting devtools watcher..."
   "$DEVTOOLS_DIR/scripts/setup-watcher.sh"
 
