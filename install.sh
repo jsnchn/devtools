@@ -183,10 +183,16 @@ main() {
 
   # Step 5: Install mise runtimes
   step "Installing language runtimes via mise..."
+  local MISE_CMD=""
   if command -v mise &>/dev/null; then
-    mise install -y || warn "mise install failed, you can run 'mise install' manually later"
+    MISE_CMD="mise"
   elif [[ -f "$HOME/.local/bin/mise" ]]; then
-    "$HOME/.local/bin/mise" install -y || warn "mise install failed"
+    MISE_CMD="$HOME/.local/bin/mise"
+  fi
+
+  if [[ -n "$MISE_CMD" ]]; then
+    $MISE_CMD trust "$HOME/.config/mise/config.toml" 2>/dev/null || true
+    $MISE_CMD install -y || warn "mise install failed, you can run 'mise install' manually later"
   fi
 
   # Step 6: Start Syncthing for config synchronization

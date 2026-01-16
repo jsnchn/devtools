@@ -127,13 +127,18 @@ install_lazygit_linux() {
 }
 
 install_tpm() {
-  if [[ -d "$HOME/.tmux/plugins/tpm" ]]; then
+  if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
+    info "Installing Tmux Plugin Manager..."
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+  else
     info "TPM is already installed"
-    return
   fi
 
-  info "Installing Tmux Plugin Manager..."
-  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+  # Install tmux plugins
+  if [[ -x "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]]; then
+    info "Installing tmux plugins..."
+    "$HOME/.tmux/plugins/tpm/bin/install_plugins" || warn "tmux plugin install failed"
+  fi
 }
 
 main() {
