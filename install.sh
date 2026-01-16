@@ -89,6 +89,17 @@ clone_or_update_repo() {
       git clone "$DEVTOOLS_REPO_HTTPS" "$DEVTOOLS_DIR"
     fi
   fi
+
+  # Switch to SSH remote if SSH is now available (for push access)
+  cd "$DEVTOOLS_DIR"
+  local current_remote
+  current_remote=$(git remote get-url origin 2>/dev/null || echo "")
+  if [[ "$current_remote" == "$DEVTOOLS_REPO_HTTPS" ]]; then
+    if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+      info "Switching remote to SSH..."
+      git remote set-url origin "$DEVTOOLS_REPO_SSH"
+    fi
+  fi
 }
 
 setup_git_config() {
