@@ -3,7 +3,6 @@
 alias ll="ls -al"
 alias lzg="lazygit"
 alias lzd="lazydocker"
-alias opencode="opencode upgrade && opencode"
 
 # Tailscale CLI (macOS uses app bundle, Linux has it in PATH)
 if [[ "$OSTYPE" == "darwin"* ]]; then
