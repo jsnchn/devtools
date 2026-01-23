@@ -18,13 +18,20 @@ This will:
 
 ## Syncing Changes
 
-```bash
-# Push config changes from current machine
-devtools-up
+Syncthing runs in the background to automatically sync configs between machines. A watcher detects changes and re-runs `install.sh` when needed.
 
-# Pull updates on other machines
-devtools-down
+For manual git sync:
+
+```bash
+devtools-sync
 ```
+
+This command will:
+1. Push any uncommitted local changes to the remote
+2. Pull any remote changes and rebase
+3. Re-run `install.sh` if updates were pulled
+
+Syncthing UI available at: http://localhost:8384
 
 ## What's Included
 
@@ -38,6 +45,7 @@ devtools-down
 - **ripgrep** - Fast search
 - **fd** - Fast file finder
 - **direnv** - Directory-based environment variables
+- **syncthing** - Continuous file sync between machines
 
 ### Configurations
 - `config/zsh/` - Shell configuration (modular via .zshrc.d/)
@@ -54,7 +62,9 @@ devtools-down
 │   ├── install-packages.sh # System packages
 │   ├── install-tools.sh    # Additional tools
 │   ├── link-dotfiles.sh    # Symlink manager
-│   └── setup-shell.sh      # Shell configuration
+│   ├── setup-shell.sh      # Shell configuration
+│   ├── setup-watcher.sh    # Auto-install watcher setup
+│   └── devtools-watch.sh   # Watcher script
 ├── config/
 │   ├── zsh/
 │   │   ├── .zshrc
@@ -62,8 +72,7 @@ devtools-down
 │   │   └── .zshrc.d/       # Modular configs
 │   ├── tmux/.tmux.conf
 │   ├── helix/config.toml
-│   ├── mise/config.toml
-│   └── opencode/config.json
+│   └── mise/config.toml
 └── infrastructure/         # Optional Docker services
     └── docker-compose.yml
 ```
@@ -74,11 +83,10 @@ Local development services via Docker:
 
 ```bash
 cd ~/.devtools/infrastructure
-cp .env.example .env
 docker-compose up -d
 ```
 
-Services: PostgreSQL (5432), Redis (6379), Elasticsearch (9200), MinIO (9000)
+See `infrastructure/README.md` for details on available services and configuration.
 
 ## Customization
 

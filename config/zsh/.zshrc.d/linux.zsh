@@ -1,5 +1,10 @@
 # Linux-specific configuration
 
+# Auto-attach to tmux on SSH login
+if [[ -n "$SSH_CONNECTION" ]] && [[ -z "$TMUX" ]] && command -v tmux &>/dev/null; then
+	tmux attach-session -t main 2>/dev/null || tmux new-session -s main
+fi
+
 # Linux ls colors
 alias ls="ls --color=auto"
 
