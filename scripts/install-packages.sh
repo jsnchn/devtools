@@ -32,6 +32,7 @@ install_macos_packages() {
     helix
     lazygit
     syncthing
+    gh
   )
 
   info "Installing packages: ${packages[*]}"

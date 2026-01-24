@@ -126,6 +126,23 @@ install_lazygit_linux() {
   info "lazygit installed successfully"
 }
 
+install_gh() {
+  command -v gh &>/dev/null && return
+  info "Installing GitHub CLI..."
+
+  if command -v apt-get &>/dev/null; then
+    # Add GitHub's official apt repository
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+    sudo apt-get update
+    sudo apt-get install -y gh
+  elif command -v dnf &>/dev/null; then
+    sudo dnf install -y gh
+  elif command -v pacman &>/dev/null; then
+    sudo pacman -S --noconfirm github-cli
+  fi
+}
+
 install_tpm() {
   if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
     info "Installing Tmux Plugin Manager..."
@@ -161,6 +178,11 @@ main() {
   # lazygit (Linux only, macOS uses brew)
   if [[ "$OS" == "linux" ]]; then
     install_lazygit_linux
+  fi
+
+  # GitHub CLI (Linux only, macOS uses brew)
+  if [[ "$OS" == "linux" ]]; then
+    install_gh
   fi
 
   # TPM (both platforms)
