@@ -19,5 +19,5 @@ format_elapsed() {
 if [ -z "$resurrect_ts" ]; then
     echo "nothing to resurrect"
 else
-    echo "Resurrect Saved $(format_elapsed $resurrect_ts)"
+    echo "resurrect saved $(format_elapsed $resurrect_ts)"
 fi
