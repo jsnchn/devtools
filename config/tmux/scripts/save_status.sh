@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-resurrect_ts=$(stat -c %Y "$HOME/.tmux/resurrect/last" 2>/dev/null)
+resurrect_ts=$(stat -c %Y "$HOME/.local/share/tmux/resurrect/last" 2>/dev/null)
 
 format_elapsed() {
     local ts=$1
