@@ -9,11 +9,11 @@ format_elapsed() {
     if [ $elapsed -lt 60 ]; then
         echo "just now"
     elif [ $elapsed -lt 3600 ]; then
-        echo "${(( elapsed / 60 ))}m ago"
+        echo "$(( elapsed / 60 ))m ago"
     elif [ $elapsed -lt 86400 ]; then
-        echo "${(( elapsed / 3600 ))}h ago"
+        echo "$(( elapsed / 3600 ))h ago"
     else
-        echo "${(( elapsed / 86400 ))}d ago"
+        echo "$(( elapsed / 86400 ))d ago"
     fi
 }
 
