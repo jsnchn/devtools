@@ -50,6 +50,8 @@ main() {
 
   # Tmux
   link_file "$DEVTOOLS_DIR/config/tmux/.tmux.conf" "$HOME/.tmux.conf"
+  mkdir -p "$XDG_CONFIG_HOME/tmux/scripts"
+  link_file "$DEVTOOLS_DIR/config/tmux/scripts/save_status.sh" "$XDG_CONFIG_HOME/tmux/scripts/save_status.sh"
 
   # Helix
   mkdir -p "$XDG_CONFIG_HOME/helix"
