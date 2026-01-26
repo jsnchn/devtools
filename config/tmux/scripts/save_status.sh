@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-continuum_ts=$(tmux show-option -gqv "@continuum-save-last-timestamp" 2>/dev/null)
 resurrect_ts=$(stat -c %Y "$HOME/.tmux/resurrect/last" 2>/dev/null)
 
 format_elapsed() {
@@ -17,10 +16,8 @@ format_elapsed() {
     fi
 }
 
-if [ -z "$continuum_ts" ] && [ -z "$resurrect_ts" ]; then
+if [ -z "$resurrect_ts" ]; then
     echo "nothing to resurrect"
-elif [ -z "$resurrect_ts" ] || ([ -n "$continuum_ts" ] && [ "$continuum_ts" -gt "$resurrect_ts" ]); then
-    echo "C $(format_elapsed $continuum_ts)"
 else
-    echo "$(format_elapsed $resurrect_ts)"
+    echo "Resurrect Saved $(format_elapsed $resurrect_ts)"
 fi
