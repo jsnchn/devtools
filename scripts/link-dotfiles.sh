@@ -65,6 +65,10 @@ main() {
   mkdir -p "$XDG_CONFIG_HOME/opencode"
   link_file "$DEVTOOLS_DIR/config/opencode/config.json" "$XDG_CONFIG_HOME/opencode/config.json"
 
+  # Lazygit
+  mkdir -p "$XDG_CONFIG_HOME/lazygit"
+  link_file "$DEVTOOLS_DIR/config/lazygit/config.yml" "$XDG_CONFIG_HOME/lazygit/config.yml"
+
   # Default npm packages (for mise node)
   link_file "$DEVTOOLS_DIR/config/mise/.default-npm-packages" "$HOME/.default-npm-packages"
 

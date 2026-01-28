@@ -1,0 +1,4 @@
+os:
+  edit: 'hx {{filename}}'
+  editAtLine: 'hx +{{line}} {{filename}}'
+  editInTerminal: true
