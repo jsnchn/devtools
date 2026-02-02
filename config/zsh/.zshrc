@@ -17,25 +17,6 @@ export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="hx"
 export VISUAL="hx"
 
-# History search with arrow keys (terminal-agnostic)
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-
-# Bind both normal mode and application mode sequences
-bindkey "${terminfo[kcuu1]:-^[[A}" up-line-or-beginning-search
-bindkey "${terminfo[kcud1]:-^[[B}" down-line-or-beginning-search
-bindkey "^[OA" up-line-or-beginning-search
-bindkey "^[OB" down-line-or-beginning-search
-
-# Source modular configurations
-if [[ -d "$DEVTOOLS_DIR/config/zsh/.zshrc.d" ]]; then
-  for config in "$DEVTOOLS_DIR/config/zsh/.zshrc.d"/*.zsh; do
-    [[ -r "$config" ]] && source "$config"
-  done
-fi
-
 # Source platform-specific config
 case "$(uname -s)" in
   Darwin)
@@ -60,3 +41,16 @@ fi
 
 # fzf
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+
+# History search with arrow keys (terminal-agnostic)
+# Loaded last to ensure it takes precedence over fzf bindings
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+# Bind both normal mode and application mode sequences
+bindkey "${terminfo[kcuu1]:-^[[A}" up-line-or-beginning-search
+bindkey "${terminfo[kcud1]:-^[[B}" down-line-or-beginning-search
+bindkey "^[OA" up-line-or-beginning-search
+bindkey "^[OB" down-line-or-beginning-search
