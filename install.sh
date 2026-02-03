@@ -126,6 +126,90 @@ start_syncthing() {
   fi
 }
 
+link_secrets() {
+  local secrets_dir="$DEVTOOLS_DIR/config/secrets"
+  local opencode_data="$HOME/.local/share/opencode"
+
+  if [[ ! -d "$secrets_dir" ]]; then
+    info "Creating secrets directory..."
+    mkdir -p "$secrets_dir"
+    return 0
+  fi
+
+  # Create opencode data directory if needed
+  mkdir -p "$opencode_data"
+
+  # Symlink opencode-auth.json
+  if [[ -f "$secrets_dir/opencode-auth.json" ]]; then
+    ln -sf "$secrets_dir/opencode-auth.json" "$opencode_data/auth.json"
+    chmod 600 "$opencode_data/auth.json"
+    info "Linked opencode-auth.json"
+  fi
+
+  # Set permissions on secrets
+  chmod -R 600 "$secrets_dir"/*.key "$secrets_dir"/*.json "$secrets_dir"/*-api-key 2>/dev/null || true
+}
+
+setup_syncthing_secrets_folder() {
+  local secrets_dir="$DEVTOOLS_DIR/config/secrets"
+  local folder_id="devtools-secrets"
+
+  # Check if Syncthing is installed
+  if ! command -v syncthing &>/dev/null; then
+    warn "Syncthing not installed, skipping secrets folder setup"
+    info "Manual setup: Add $secrets_dir to Syncthing"
+    return 0
+  fi
+
+  # Check if folder already configured
+  local syncthing_api_key=""
+  if [[ -f "$HOME/.config/syncthing/apikey.txt" ]]; then
+    syncthing_api_key=$(cat "$HOME/.config/syncthing/apikey.txt")
+  fi
+
+  if [[ -z "$syncthing_api_key" ]]; then
+    warn "Could not read Syncthing API key"
+    info "Manual setup: Add $secrets_dir to Syncthing"
+    return 0
+  fi
+
+  # Wait for Syncthing to be ready
+  sleep 3
+
+  # Check if secrets folder already configured
+  if curl -s "http://127.0.0.1:8384/rest/config/folders" \
+    -H "X-API-Key: $syncthing_api_key" 2>/dev/null | grep -q "$folder_id"; then
+    info "Secrets folder already configured in Syncthing"
+    return 0
+  fi
+
+  # Add secrets folder to Syncthing via REST API
+  local folder_config=$(cat <<EOF
+{
+  "id": "$folder_id",
+  "label": "Devtools Secrets",
+  "path": "$secrets_dir",
+  "type": "sendreceive",
+  "autoNormalize": true,
+  "ignoreDelete": false,
+  "ignorePerms": false,
+  "ignorePatterns": false,
+  "ignoreDotFiles": false
+}
+EOF
+)
+
+  if curl -s -X POST "http://127.0.0.1:8384/rest/config/folders" \
+    -H "X-API-Key: $syncthing_api_key" \
+    -H "Content-Type: application/json" \
+    -d "$folder_config" 2>/dev/null; then
+    info "Configured Syncthing to sync secrets folder"
+  else
+    warn "Failed to configure Syncthing folder"
+    info "Manual setup: Add $secrets_dir to Syncthing"
+  fi
+}
+
 main() {
   echo ""
   echo "======================================"
@@ -196,6 +280,13 @@ main() {
   # Step 6: Start Syncthing for config synchronization
   step "Starting Syncthing..."
   start_syncthing "$OS"
+
+  # Step 6.5: Link secrets to OS-specific locations
+  step "Setting up secrets..."
+  link_secrets
+
+  # Step 6.6: Configure Syncthing for secrets sync
+  setup_syncthing_secrets_folder
 
   # Step 7: Start devtools watcher for auto-install on sync
   step "Starting devtools watcher..."

@@ -1,5 +1,14 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "theme": "ayu",
-  "autoupdate": true
+  "autoupdate": true,
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp-server"],
+      "env": {
+        "CONTEXT7_API_KEY": "{file:~/.devtools/config/secrets/context7-api-key}"
+      }
+    }
+  }
 }
