@@ -112,6 +112,16 @@ setup_git_config() {
   fi
 }
 
+install_claude_code() {
+  if command -v claude &>/dev/null; then
+    info "Claude Code already installed"
+    return 0
+  fi
+
+  info "Installing Claude Code..."
+  curl -fsSL https://claude.ai/install.sh | bash
+}
+
 start_syncthing() {
   local os="$1"
   if [[ "$os" == "macos" ]]; then
@@ -277,18 +287,22 @@ main() {
     $MISE_CMD install -y || warn "mise install failed, you can run 'mise install' manually later"
   fi
 
-  # Step 6: Start Syncthing for config synchronization
+  # Step 6: Install Claude Code
+  step "Installing Claude Code..."
+  install_claude_code
+
+  # Step 7: Start Syncthing for config synchronization
   step "Starting Syncthing..."
   start_syncthing "$OS"
 
-  # Step 6.5: Link secrets to OS-specific locations
+  # Step 8: Link secrets to OS-specific locations
   step "Setting up secrets..."
   link_secrets
 
-  # Step 6.6: Configure Syncthing for secrets sync
+  # Step 9: Configure Syncthing for secrets sync
   setup_syncthing_secrets_folder
 
-  # Step 7: Start devtools watcher for auto-install on sync
+  # Step 10: Start devtools watcher for auto-install on sync
   step "Starting devtools watcher..."
   "$DEVTOOLS_DIR/scripts/setup-watcher.sh"
 
