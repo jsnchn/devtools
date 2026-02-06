@@ -27,6 +27,10 @@ case "$(uname -s)" in
     ;;
 esac
 
+# Source common configs
+[[ -r "$DEVTOOLS_DIR/config/zsh/.zshrc.d/prompt.zsh" ]] && source "$DEVTOOLS_DIR/config/zsh/.zshrc.d/prompt.zsh"
+[[ -r "$DEVTOOLS_DIR/config/zsh/.zshrc.d/aliases.zsh" ]] && source "$DEVTOOLS_DIR/config/zsh/.zshrc.d/aliases.zsh"
+
 # direnv
 if command -v direnv &>/dev/null; then
   eval "$(direnv hook zsh)"
