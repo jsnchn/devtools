@@ -6,6 +6,7 @@ mouse = true
 bufferline = "multiple"
 color-modes = true
 true-color = true
+clipboard-provider = "tmux"
 
 [editor.cursor-shape]
 insert = "bar"
@@ -35,3 +36,4 @@ C-s = ":w"
 # Buffer navigation
 H = ":buffer-previous"
 L = ":buffer-next"
+
