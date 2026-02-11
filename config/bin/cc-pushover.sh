@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Load machine-specific credentials (not committed to repo)
+if [[ -f "$HOME/.pushover.env" ]]; then
+  source "$HOME/.pushover.env"
+fi
+
 APP_TOKEN="${PUSHOVER_APP_TOKEN:-YOUR_APP_TOKEN}"
 USER_KEY="${PUSHOVER_USER_KEY:-YOUR_USER_KEY}"
 
