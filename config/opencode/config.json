@@ -2,6 +2,29 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "ayu",
   "autoupdate": true,
+  "hooks": {
+    "beforeExecute": [
+      {
+        "name": "pushover-before",
+        "command": "~/bin/cc-pushover.sh",
+        "args": ["OpenCode PreToolUse", "Tool: $TOOL_NAME"]
+      }
+    ],
+    "afterExecute": [
+      {
+        "name": "pushover-after",
+        "command": "~/bin/cc-pushover.sh",
+        "args": ["OpenCode PostToolUse", "Tool: $TOOL_NAME Status: $STATUS"]
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "name": "pushover-prompt",
+        "command": "~/bin/cc-pushover.sh",
+        "args": ["OpenCode Prompt", "$PROMPT"]
+      }
+    ]
+  },
   "mcp": {
     "context7": {
       "type": "local",
