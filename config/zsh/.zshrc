@@ -12,6 +12,7 @@ export DEVTOOLS_DIR="${DEVTOOLS_DIR:-$HOME/.devtools}"
 # Base PATH
 export PATH="/usr/local/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
 
 # Set default editor
 export EDITOR="hx"

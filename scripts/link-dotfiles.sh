@@ -64,6 +64,16 @@ main() {
   # OpenCode
   mkdir -p "$XDG_CONFIG_HOME/opencode"
   link_file "$DEVTOOLS_DIR/config/opencode/config.json" "$XDG_CONFIG_HOME/opencode/config.json"
+  link_file "$DEVTOOLS_DIR/config/opencode/hooks.json" "$XDG_CONFIG_HOME/opencode/hooks.json"
+
+  # Claude Code hooks (global)
+  mkdir -p "$HOME/.claude"
+  link_file "$DEVTOOLS_DIR/config/opencode/hooks.json" "$HOME/.claude/hooks.json"
+
+  # Scripts (Pushover notification script)
+  mkdir -p "$HOME/bin"
+  chmod +x "$DEVTOOLS_DIR/config/bin/cc-pushover.sh"
+  link_file "$DEVTOOLS_DIR/config/bin/cc-pushover.sh" "$HOME/bin/cc-pushover.sh"
 
   # Lazygit
   mkdir -p "$XDG_CONFIG_HOME/lazygit"
