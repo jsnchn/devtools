@@ -2,8 +2,7 @@
 
 ## Commands
 - **Install/Update**: `./install.sh`
-- **Test on macOS**: Run `./install.sh` locally
-- **Test on Linux**: `docker run -it ubuntu:24.04 bash` then curl the install script
+- **Test**: `docker run -it ubuntu:24.04 bash` then curl the install script
 - **No test framework** - Ask user for test commands if needed
 - **Git Version Control** - Never commit or push without permission. Commit author should always be the user only (no co-authored-by lines)
 
@@ -23,9 +22,7 @@
 
 ## Important Notes
 - Primary user is `jsnchn`
-- Supports both macOS (Homebrew) and Linux (apt)
+- Ubuntu-only (apt)
 - Uses mise for version management
 - Helix is the primary editor
 - All configs are symlinked, not copied
-- Uses Syncthing for automatic config sync between machines
-- `devtools-sync` command to push/pull package changes

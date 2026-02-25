@@ -11,81 +11,77 @@ info() { echo "[INFO] $1"; }
 warn() { echo "[WARN] $1"; }
 
 backup_file() {
-  local file="$1"
+	local file="$1"
 
-  if [[ -e "$file" ]] || [[ -L "$file" ]]; then
-    if [[ -z "$BACKUP_DIR" ]]; then
-      BACKUP_DIR="$HOME/.devtools-backup-$(date +%Y%m%d-%H%M%S)"
-      mkdir -p "$BACKUP_DIR"
-      info "Backing up existing files to: $BACKUP_DIR"
-    fi
+	if [[ -e "$file" ]] || [[ -L "$file" ]]; then
+		if [[ -z "$BACKUP_DIR" ]]; then
+			BACKUP_DIR="$HOME/.devtools-backup-$(date +%Y%m%d-%H%M%S)"
+			mkdir -p "$BACKUP_DIR"
+			info "Backing up existing files to: $BACKUP_DIR"
+		fi
 
-    local filename
-    filename=$(basename "$file")
-    mv "$file" "$BACKUP_DIR/$filename"
-  fi
+		local filename
+		filename=$(basename "$file")
+		mv "$file" "$BACKUP_DIR/$filename"
+	fi
 }
 
 link_file() {
-  local src="$1"
-  local dst="$2"
+	local src="$1"
+	local dst="$2"
 
-  if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
-    # Already correctly linked
-    return
-  fi
+	if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
+		# Already correctly linked
+		return
+	fi
 
-  backup_file "$dst"
-  mkdir -p "$(dirname "$dst")"
-  ln -sf "$src" "$dst"
-  info "Linked: $dst -> $src"
+	backup_file "$dst"
+	mkdir -p "$(dirname "$dst")"
+	ln -sf "$src" "$dst"
+	info "Linked: $dst -> $src"
 }
 
 main() {
-  info "Linking configs..."
+	info "Linking configs..."
 
-  # Zsh
-  link_file "$DEVTOOLS_DIR/config/zsh/.zshrc" "$HOME/.zshrc"
-  link_file "$DEVTOOLS_DIR/config/zsh/.zprofile" "$HOME/.zprofile"
+	# Zsh
+	link_file "$DEVTOOLS_DIR/config/zsh/.zshrc" "$HOME/.zshrc"
+	link_file "$DEVTOOLS_DIR/config/zsh/.zprofile" "$HOME/.zprofile"
 
-  # Tmux
-  link_file "$DEVTOOLS_DIR/config/tmux/.tmux.conf" "$HOME/.tmux.conf"
-  mkdir -p "$XDG_CONFIG_HOME/tmux/scripts"
-  link_file "$DEVTOOLS_DIR/config/tmux/scripts/save_status.sh" "$XDG_CONFIG_HOME/tmux/scripts/save_status.sh"
+	# Tmux
+	link_file "$DEVTOOLS_DIR/config/tmux/.tmux.conf" "$HOME/.tmux.conf"
+	mkdir -p "$XDG_CONFIG_HOME/tmux/scripts"
+	link_file "$DEVTOOLS_DIR/config/tmux/scripts/save_status.sh" "$XDG_CONFIG_HOME/tmux/scripts/save_status.sh"
 
-  # Helix
-  mkdir -p "$XDG_CONFIG_HOME/helix"
-  link_file "$DEVTOOLS_DIR/config/helix/config.toml" "$XDG_CONFIG_HOME/helix/config.toml"
+	# Helix
+	mkdir -p "$XDG_CONFIG_HOME/helix"
+	link_file "$DEVTOOLS_DIR/config/helix/config.toml" "$XDG_CONFIG_HOME/helix/config.toml"
 
-  # mise
-  mkdir -p "$XDG_CONFIG_HOME/mise"
-  link_file "$DEVTOOLS_DIR/config/mise/config.toml" "$XDG_CONFIG_HOME/mise/config.toml"
+	# mise
+	mkdir -p "$XDG_CONFIG_HOME/mise"
+	link_file "$DEVTOOLS_DIR/config/mise/config.toml" "$XDG_CONFIG_HOME/mise/config.toml"
 
-  # OpenCode
-  mkdir -p "$XDG_CONFIG_HOME/opencode"
-  link_file "$DEVTOOLS_DIR/config/opencode/config.json" "$XDG_CONFIG_HOME/opencode/config.json"
+	# OpenCode
+	mkdir -p "$XDG_CONFIG_HOME/opencode"
+	link_file "$DEVTOOLS_DIR/config/opencode/config.json" "$XDG_CONFIG_HOME/opencode/config.json"
 
-  # Claude Code hooks (global)
-  mkdir -p "$HOME/.claude"
-  link_file "$DEVTOOLS_DIR/config/claude-code/hooks.json" "$HOME/.claude/hooks.json"
+	# Scripts (Pushover notification script)
+	mkdir -p "$HOME/bin"
+	chmod +x "$DEVTOOLS_DIR/config/bin/pushover.sh"
+	link_file "$DEVTOOLS_DIR/config/bin/pushover.sh" "$HOME/bin/pushover.sh"
 
-  # Scripts (Pushover notification script)
-  mkdir -p "$HOME/bin"
-  chmod +x "$DEVTOOLS_DIR/config/bin/cc-pushover.sh"
-  link_file "$DEVTOOLS_DIR/config/bin/cc-pushover.sh" "$HOME/bin/cc-pushover.sh"
+	# Lazygit
+	mkdir -p "$XDG_CONFIG_HOME/lazygit"
+	link_file "$DEVTOOLS_DIR/config/lazygit/config.yml" "$XDG_CONFIG_HOME/lazygit/config.yml"
 
-  # Lazygit
-  mkdir -p "$XDG_CONFIG_HOME/lazygit"
-  link_file "$DEVTOOLS_DIR/config/lazygit/config.yml" "$XDG_CONFIG_HOME/lazygit/config.yml"
+	# Default npm packages (for mise node)
+	link_file "$DEVTOOLS_DIR/config/mise/.default-npm-packages" "$HOME/.default-npm-packages"
 
-  # Default npm packages (for mise node)
-  link_file "$DEVTOOLS_DIR/config/mise/.default-npm-packages" "$HOME/.default-npm-packages"
+	info "Configs linked successfully!"
 
-  info "Configs linked successfully!"
-
-  if [[ -n "$BACKUP_DIR" ]]; then
-    warn "Old configs backed up to: $BACKUP_DIR"
-  fi
+	if [[ -n "$BACKUP_DIR" ]]; then
+		warn "Old configs backed up to: $BACKUP_DIR"
+	fi
 }
 
 main
