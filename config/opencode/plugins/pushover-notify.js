@@ -1,6 +1,6 @@
 export const PushoverNotify = async ({ project, client, $, directory, worktree }) => {
 	const notify = async (title, message) => {
-		const scriptPath = `${process.env.HOME}/.devtools/scripts/pushover-notify`
+		const scriptPath = `${process.env.HOME}/bin/pushover.sh`
 		await $`"$scriptPath" "$message" "$title"`
 	}
 
