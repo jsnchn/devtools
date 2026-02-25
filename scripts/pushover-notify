@@ -1,0 +1,32 @@
+#!/bin/bash
+set -euo pipefail
+
+CONFIG_FILE="${HOME}/.devtools/config/secrets/pushover.json"
+
+if [[ ! -f "$CONFIG_FILE" ]]; then
+	echo "Error: Config file not found: $CONFIG_FILE" >&2
+	exit 1
+fi
+
+TOKEN="$(jq -r '.token' "$CONFIG_FILE" 2>/dev/null)"
+USER="$(jq -r '.user' "$CONFIG_FILE" 2>/dev/null)"
+
+if [[ -z "$TOKEN" || -z "$USER" || "$TOKEN" == "null" || "$USER" == "null" ]]; then
+	echo "Error: Missing token or user in config" >&2
+	exit 1
+fi
+
+MESSAGE="${1:-}"
+TITLE="${2:-OpenCode}"
+
+if [[ -z "$MESSAGE" ]]; then
+	echo "Usage: pushover-notify <message> [title]" >&2
+	exit 1
+fi
+
+curl -s \
+	-F "token=$TOKEN" \
+	-F "user=$USER" \
+	-F "title=$TITLE" \
+	-F "message=$MESSAGE" \
+	https://api.pushover.net/1/messages.json
