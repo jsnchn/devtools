@@ -1,5 +1,23 @@
 {
 	"$schema": "https://opencode.ai/config.json",
 	"theme": "ayu",
-	"autoupdate": true
+	"autoupdate": true,
+	"agent": {
+		"plan": {
+			"model": "opencode/glm-5"
+		},
+		"build": {
+			"model": "opencode/minimax-m2.5-free"
+		}
+	},
+	"mcp": {
+		"context7": {
+			"type": "remote",
+			"url": "https://mcp.context7.com/mcp",
+			"headers": {
+				"CONTEXT7_API_KEY": "ctx7sk-2e5b61f7-0b66-413f-8a61-5bb14f595ded"
+			},
+			"enabled": true
+		}
+	}
 }
