@@ -141,6 +141,17 @@ install_tpm() {
 	fi
 }
 
+install_ttyd() {
+	if command -v ttyd &>/dev/null; then
+		info "ttyd is already installed"
+		return
+	fi
+
+	info "Installing ttyd..."
+	sudo apt-get update
+	sudo apt-get install -y ttyd
+}
+
 main() {
 	info "Installing tools..."
 
@@ -164,6 +175,9 @@ main() {
 
 	# TPM
 	install_tpm
+
+	# ttyd (tmux web interface)
+	install_ttyd
 
 	info "Tool installation complete!"
 }
