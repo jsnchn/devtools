@@ -4,7 +4,7 @@
 	"autoupdate": true,
 	"agent": {
 		"plan": {
-			"model": "opencode/glm-5"
+			"model": "openrouter/glm-5"
 		},
 		"build": {
 			"model": "opencode/minimax-m2.5-free"
