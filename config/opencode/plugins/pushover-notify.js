@@ -22,7 +22,7 @@ export const PushoverNotify = async ({ project, client, $, directory, worktree }
 	}
 
 	const notify = async (title, message, priority = 0, url = "", urlTitle = "") => {
-		await $`"$scriptPath" "$title" "$message" "$url" "$urlTitle" "$priority"`
+		await $`${scriptPath} "${title}" "${message}" "${url}" "${urlTitle}" ${priority}`
 	}
 
 	return {
