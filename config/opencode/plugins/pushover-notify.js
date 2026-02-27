@@ -18,7 +18,7 @@ export const PushoverNotify = async ({ project, client, $, directory, worktree }
 	}
 
 	if (tmuxSession !== "no-tmux" && machineHostname !== "unknown-host") {
-		baseUrl = `https://${machineHostname}.tailscale.net/tmux/${tmuxSession}`
+		baseUrl = `https://${machineHostname}.tailscale.net:8080/${tmuxSession}`
 	}
 
 	const notify = async (title, message, priority = 0, url = "", urlTitle = "") => {
