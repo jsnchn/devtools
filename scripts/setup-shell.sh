@@ -7,41 +7,38 @@ info() { echo "[INFO] $1"; }
 warn() { echo "[WARN] $1"; }
 
 main() {
-  local zsh_path
-  zsh_path=$(which zsh)
+	local zsh_path
+	zsh_path=$(which zsh)
 
-  if [[ -z "$zsh_path" ]]; then
-    warn "zsh not found, skipping shell setup"
-    return
-  fi
+	if [[ -z "$zsh_path" ]]; then
+		warn "zsh not found, skipping shell setup"
+		return
+	fi
 
-  # Check if zsh is already the default shell
-  if [[ "$SHELL" == "$zsh_path" ]]; then
-    info "zsh is already the default shell"
-    return
-  fi
+	# Check if zsh is already the default shell
+	if [[ "$SHELL" == "$zsh_path" ]]; then
+		info "zsh is already the default shell"
+		return
+	fi
 
-  # Ensure zsh is in /etc/shells
-  if ! grep -q "$zsh_path" /etc/shells 2>/dev/null; then
-    info "Adding $zsh_path to /etc/shells..."
-    if ! echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null 2>&1; then
-      warn "Could not add zsh to /etc/shells (needs sudo). Run manually:"
-      warn "  echo '$zsh_path' | sudo tee -a /etc/shells"
-    fi
-  fi
+	# Ensure zsh is in /etc/shells
+	if ! grep -q "$zsh_path" /etc/shells 2>/dev/null; then
+		info "Adding $zsh_path to /etc/shells..."
+		if ! echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null 2>&1; then
+			warn "Could not add zsh to /etc/shells (needs sudo). Run manually:"
+			warn "  echo '$zsh_path' | sudo tee -a /etc/shells"
+		fi
+	fi
 
-  # Change default shell
-  if [[ "$SHELL" != "$zsh_path" ]]; then
-    info "Setting zsh as default shell..."
-    # Try without sudo first (works on macOS), then with sudo (needed on Linux)
-    if chsh -s "$zsh_path" 2>/dev/null; then
-      info "Default shell changed to zsh"
-    elif sudo chsh -s "$zsh_path" "$USER" 2>/dev/null; then
-      info "Default shell changed to zsh (via sudo)"
-    else
-      warn "Could not change default shell. Run manually: sudo chsh -s $zsh_path $USER"
-    fi
-  fi
+	# Change default shell
+	if [[ "$SHELL" != "$zsh_path" ]]; then
+		info "Setting zsh as default shell..."
+		if sudo chsh -s "$zsh_path" "$USER" 2>/dev/null; then
+			info "Default shell changed to zsh"
+		else
+			warn "Could not change default shell. Run manually: sudo chsh -s $zsh_path $USER"
+		fi
+	fi
 }
 
 main

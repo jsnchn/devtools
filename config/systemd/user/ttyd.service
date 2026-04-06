@@ -1,0 +1,13 @@
+[Unit]
+Description=ttyd - terminal web interface
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/ttyd -p 7681 tmux new-session -A -s ttyd
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

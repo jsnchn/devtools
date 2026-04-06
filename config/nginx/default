@@ -1,0 +1,11 @@
+# Default nginx config
+server {
+    listen 80;
+    server_name _;
+
+    root /var/www/html;
+
+    location / {
+        return 404;
+    }
+}

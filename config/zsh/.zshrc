@@ -19,14 +19,7 @@ export EDITOR="hx"
 export VISUAL="hx"
 
 # Source platform-specific config
-case "$(uname -s)" in
-  Darwin)
-    [[ -r "$DEVTOOLS_DIR/config/zsh/.zshrc.d/macos.zsh" ]] && source "$DEVTOOLS_DIR/config/zsh/.zshrc.d/macos.zsh"
-    ;;
-  Linux)
-    [[ -r "$DEVTOOLS_DIR/config/zsh/.zshrc.d/linux.zsh" ]] && source "$DEVTOOLS_DIR/config/zsh/.zshrc.d/linux.zsh"
-    ;;
-esac
+[[ -r "$DEVTOOLS_DIR/config/zsh/.zshrc.d/linux.zsh" ]] && source "$DEVTOOLS_DIR/config/zsh/.zshrc.d/linux.zsh"
 
 # Source common configs
 [[ -r "$DEVTOOLS_DIR/config/zsh/.zshrc.d/prompt.zsh" ]] && source "$DEVTOOLS_DIR/config/zsh/.zshrc.d/prompt.zsh"
@@ -34,14 +27,14 @@ esac
 
 # direnv
 if command -v direnv &>/dev/null; then
-  eval "$(direnv hook zsh)"
+	eval "$(direnv hook zsh)"
 fi
 
 # mise (version manager)
 if command -v mise &>/dev/null; then
-  eval "$(mise activate zsh)"
+	eval "$(mise activate zsh)"
 elif [[ -f "$HOME/.local/bin/mise" ]]; then
-  eval "$($HOME/.local/bin/mise activate zsh)"
+	eval "$($HOME/.local/bin/mise activate zsh)"
 fi
 
 # fzf
