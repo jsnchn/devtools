@@ -54,8 +54,13 @@ autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 
-# Bind both normal mode and application mode sequences
-bindkey "${terminfo[kcuu1]:-^[[A}" up-line-or-beginning-search
-bindkey "${terminfo[kcud1]:-^[[B}" down-line-or-beginning-search
+# Bind both normal mode (^[[A) and application mode (^[OA) sequences
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
 bindkey "^[OA" up-line-or-beginning-search
 bindkey "^[OB" down-line-or-beginning-search
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/jasonchen/.lmstudio/bin"
+# End of LM Studio CLI section
+

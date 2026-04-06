@@ -1,2 +1,4 @@
 opencode-ai@latest
 pnpm@latest-10
+typescript
+typescript-language-server
